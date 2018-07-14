@@ -86,6 +86,11 @@ void* consumer(void *ptr) {
  */
 
 int main(int argc, char **argv) {
+  if (argc != 3) {
+    sprintf("Please pass two arguments.");
+    exit(1);
+  }
+
   // Initialize the buffer_mutex and condition variables
 
   pthread_mutex_init(&buffer_mutex, NULL);
@@ -96,45 +101,15 @@ int main(int argc, char **argv) {
   sem_init(&empty_sem, 0, 0);
   sem_init(&full_sem, 0, BUF_SIZE);
 
-  // Create the threads
+  // Add your code to create the threads.
+  // Make sure to allocate and pass the arguments correctly.
 
-  int num_prod = atoi(argv[1]);
-  int num_cons = atoi(argv[2]);
-  int max;
 
-  if (num_cons > num_prod) {
-    max = num_cons;
-  }
-  else {
-    max = num_prod;
-  }
-
-  pthread_t prods[num_prod];
-  pthread_t cons[num_cons];
-
-  for (int i = 0; i < max; i++) {
-    if (i < num_cons) {
-      int *id = malloc(sizeof(int));
-      *id = i;
-      pthread_create(&cons[i], NULL, consumer, (void *) id);
-    }
-    if (i < num_prod) {
-      int *id = malloc(sizeof(int));
-      *id = i;
-      pthread_create(&prods[i], NULL, producer, (void *) id);
-    }
-  }
-
-  // Wait for the threads to finish
+  // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
 
-  for (int i = 0; i < max; i++) {
-    if (i < num_cons)
-      pthread_join(cons[i], NULL);
-    if (i < num_prod)
-      pthread_join(prods[i], NULL);
-  }
+
 
   pthread_mutex_destroy(&buffer_mutex);
 
