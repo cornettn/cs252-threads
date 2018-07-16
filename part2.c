@@ -43,7 +43,6 @@ void *create_oxygen(void *ptr) {
 
   // Add your code to signal consumers of oxygen
 
-  }
 
   pthread_exit(0);
 } /* create_oxygen() */
@@ -106,7 +105,8 @@ void *create_no2(void *ptr) {
     // Add your code to consume one N2 molecule and two O2 molecules and
     // produce two NO2 molecules
 
-    printf("One molecule of N2 and two molecules of O2 combined to produce two molecules of NO2.\n");
+    printf("One molecule of N2 and two molecules of O2 combined to "
+           "produce two molecules of NO2.\n");
   }
 } /* create_no2() */
 
