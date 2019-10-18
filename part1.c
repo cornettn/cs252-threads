@@ -90,6 +90,8 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Please pass two arguments.\n");
     exit(1);
   }
+
+  // Initialize num_producers and num_consumers with the values provided by user
   
   int num_producers = atoi(argv[1]);
   int num_consumers = atoi(argv[2]);
@@ -106,7 +108,7 @@ int main(int argc, char **argv) {
 
   // Add your code to create the threads.
   // Make sure to allocate and pass the arguments correctly.
-  
+
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end

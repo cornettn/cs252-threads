@@ -136,6 +136,12 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
+  // Initialize number of oxygen and nitrogen atoms with the values provided
+  // by the user.
+  
+  int num_oxygen = atoi(argv[1]);
+  int num_nitrogen = atoi(argv[2]);
+
   // The semaphores should all be initialized to 0, except for g_sig_basic,
   // since there is not enough material to construct any molecules except
   // for the basic atoms
