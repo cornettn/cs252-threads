@@ -8,10 +8,10 @@
 // The number of molecules of each type
 // (O, N, O2, and N2)
 
-int num_oxygen;
-int num_nitrogen;
-int num_o2;
-int num_n2;
+int g_num_oxygen;
+int g_num_nitrogen;
+int g_num_o2;
+int g_num_n2;
 
 // The semaphores are named according to the molecule that waits on it.
 // For example, create_o3 waits on sig_o3, which must be signaled by create_o2.
@@ -132,7 +132,7 @@ void *create_o3(void *ptr) {
 
 int main(int argc, char **argv) {
   if (argc != 3) {
-    sprintf("Please pass two arguments.");
+    fprintf(stderr, "Please pass two arguments.\n");
     exit(1);
   }
 
