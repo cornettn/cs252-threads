@@ -41,7 +41,7 @@ void *producer(void *ptr) {
   printf("Producer %d starting\n", thread_id);
   fflush(NULL);
 
-  for (int i = 0; i < strlen(prod_str); i++) {
+  for (size_t i = 0; i < strlen(prod_str); i++) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then add prod_str[i] to the buffer.
 
@@ -66,7 +66,7 @@ void *consumer(void *ptr) {
   printf("Consumer %d starting\n", thread_id);
   fflush(NULL);
 
-  for (int i = 0; i < strlen(prod_str); i++) {
+  for (size_t i = 0; i < strlen(prod_str); i++) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then consume prod_str[i] from the buffer, replacing
     // the following line.
@@ -87,7 +87,7 @@ void *consumer(void *ptr) {
 
 int main(int argc, char **argv) {
   if (argc != 3) {
-    fprintf(stderr, "Please pass two arguments.");
+    fprintf(stderr, "%s requires two arguments.", argv[0]);
     exit(1);
   }
 
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
 
   // Add your code to create the threads.
   // Make sure to allocate and pass the arguments correctly.
-
+  
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
