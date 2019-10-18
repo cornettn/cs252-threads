@@ -16,16 +16,16 @@ bounded_buffer g_buffer;
 
 pthread_mutex_t g_buffer_mutex;
 
-// empty_sem is the number of characters in the g_buffer, that need to be emptied.
-// Producers should signal empty_sem and consumers should wait on it.
+// g_empty_sem is the number of characters in the g_buffer, that need to be emptied.
+// Producers should signal g_empty_sem and consumers should wait on it.
 
-sem_t empty_sem;
+sem_t g_empty_sem;
 
-// full_sem is the opposite of empty_sem. It is the number of unfilled slots in
+// g_full_sem is the opposite of g_empty_sem. It is the number of unfilled slots in
 // the g_buffer that need to be filled. Consumers should signal it, and producers
 // should wait on it.
 
-sem_t full_sem;
+sem_t g_full_sem;
 
 /*
  * Produce the characters (that is, add them to the g_buffer) from g_prod_str, in
@@ -95,11 +95,11 @@ int main(int argc, char **argv) {
 
   pthread_mutex_init(&g_buffer_mutex, NULL);
 
-  // Since the g_buffer starts out with no characters, empty_sem should be 0 and
-  // full_sem should be the full size of the g_buffer.
+  // Since the g_buffer starts out with no characters, g_empty_sem should be 0 and
+  // g_full_sem should be the full size of the g_buffer.
 
-  sem_init(&empty_sem, 0, 0);
-  sem_init(&full_sem, 0, BUF_SIZE);
+  sem_init(&g_empty_sem, 0, 0);
+  sem_init(&g_full_sem, 0, BUF_SIZE);
 
   // Add your code to create the threads.
   // Make sure to allocate and pass the arguments correctly.
