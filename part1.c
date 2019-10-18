@@ -93,8 +93,8 @@ int main(int argc, char **argv) {
 
   // Initialize num_producers and num_consumers with the values provided by user
   
-  int num_producers = atoi(argv[1]);
-  int num_consumers = atoi(argv[2]);
+  //int num_producers = atoi(argv[1]);
+  //int num_consumers = atoi(argv[2]);
 
   // Initialize the g_buffer_mutex and condition variables
 
