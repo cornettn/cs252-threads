@@ -1,5 +1,5 @@
 # Use GNU compiler
-CC = gcc -g -Wall -Werror -pthread
+CC = gcc -g -Wextra -pedantic -Wall -Werror -pthread
 
 PARTS = part1 part2
 

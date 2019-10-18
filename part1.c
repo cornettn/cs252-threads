@@ -87,7 +87,7 @@ void* consumer(void *ptr) {
 
 int main(int argc, char **argv) {
   if (argc != 3) {
-    sprintf("Please pass two arguments.");
+    fprintf(stderr, "Please pass two arguments.");
     exit(1);
   }
 
