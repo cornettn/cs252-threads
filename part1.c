@@ -33,7 +33,7 @@ sem_t full_sem;
  * an (int *).
  */
 
-void* producer(void *ptr) {
+void *producer(void *ptr) {
   int thread_id = *((int *) ptr);
   free(ptr);
   ptr = NULL;
@@ -58,7 +58,7 @@ void* producer(void *ptr) {
  * in the buffer. Receive and ID as an argument via an (int *).
  */
 
-void* consumer(void *ptr) {
+void *consumer(void *ptr) {
   int thread_id = *((int *) ptr);
   free(ptr);
   ptr = NULL;
