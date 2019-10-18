@@ -8,22 +8,22 @@
 // The number of molecules of each type
 // (O, N, O2, and N2)
 
-int g_num_oxygen;
-int g_num_nitrogen;
-int g_num_o2;
-int g_num_n2;
+int g_num_oxygen = 0;
+int g_num_nitrogen = 0;
+int g_num_o2 = 0;
+int g_num_n2 = 0;
 
 // The semaphores are named according to the molecule that waits on it.
-// For example, create_o3 waits on sig_o3, which must be signaled by create_o2.
-// sig_basic must be held whenever any molecule is being formed
+// For example, create_o3 waits on g_sig_o3, which must be signaled by create_o2.
+// g_sig_basic must be held whenever any molecule is being formed
 // (including basic N and O atoms).
 // You don't have to use these, if there's a different method you'd prefer.
 
-sem_t sig_basic;
-sem_t sig_o2;
-sem_t sig_n2;
-sem_t sig_no2;
-sem_t sig_o3;
+sem_t g_sig_basic;
+sem_t g_sig_o2;
+sem_t g_sig_n2;
+sem_t g_sig_no2;
+sem_t g_sig_o3;
 
 /*
  * Create oxygen atoms. The number of atoms to create is specified by the
@@ -136,15 +136,15 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // The semaphores should all be initialized to 0, except for sig_basic,
+  // The semaphores should all be initialized to 0, except for g_sig_basic,
   // since there is not enough material to construct any molecules except
   // for the basic atoms
 
-  sem_init(&sig_basic, 0, 1);
-  sem_init(&sig_n2, 0, 0);
-  sem_init(&sig_o2, 0, 0);
-  sem_init(&sig_o3, 0, 0);
-  sem_init(&sig_no2, 0, 0);
+  sem_init(&g_sig_basic, 0, 1);
+  sem_init(&g_sig_n2, 0, 0);
+  sem_init(&g_sig_o2, 0, 0);
+  sem_init(&g_sig_o3, 0, 0);
+  sem_init(&g_sig_no2, 0, 0);
 
   // Add your code to create the threads.  Remember to allocate and pass the
   // arguments for create_oxygen and create_nitrogen.

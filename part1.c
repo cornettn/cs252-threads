@@ -90,6 +90,9 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Please pass two arguments.\n");
     exit(1);
   }
+  
+  int num_producers = atoi(argv[1]);
+  int num_consumers = atoi(argv[2]);
 
   // Initialize the g_buffer_mutex and condition variables
 
