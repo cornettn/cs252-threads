@@ -9,8 +9,8 @@ typedef struct {
   int tail;
 } bounded_buffer;
 
-void* producer(void *ptr);
+void *producer(void *ptr);
 
-void* consumer(void *ptr);
+void *consumer(void *ptr);
 
 #endif // PART1_H
