@@ -16,21 +16,22 @@ bounded_buffer g_buffer;
 
 pthread_mutex_t g_buffer_mutex;
 
-// g_empty_sem is the number of characters in the g_buffer, that need to be emptied.
+// g_empty_sem is the number of characters in the g_buffer, 
+// that need to be emptied.
 // Producers should signal g_empty_sem and consumers should wait on it.
 
 sem_t g_empty_sem;
 
-// g_full_sem is the opposite of g_empty_sem. It is the number of unfilled slots in
-// the g_buffer that need to be filled. Consumers should signal it, and producers
-// should wait on it.
+// g_full_sem is the opposite of g_empty_sem. It is the number of 
+// unfilled slots in the g_buffer that need to be filled. Consumers 
+// should signal it, and producers should wait on it.
 
 sem_t g_full_sem;
 
 /*
- * Produce the characters (that is, add them to the g_buffer) from g_prod_str, in
- * order. Signal consumers appropriately after each character. Receive an ID via
- * an (int *).
+ * Produce the characters (that is, add them to the g_buffer) from g_prod_str,
+ *  in order. Signal consumers appropriately after each character. 
+ * Receive an ID via an (int *).
  */
 
 void *producer(void *ptr) {
@@ -54,8 +55,8 @@ void *producer(void *ptr) {
 /*
  * Consume characters from the g_buffer. Stop after consuming the length of
  * g_prod_str, meaning that if an equal number of consumers and producers are
- * started, they will all exit. Signal producers appropriately of new free space
- * in the g_buffer. Receive and ID as an argument via an (int *).
+ * started, they will all exit. Signal producers appropriately of new free 
+ * space in the g_buffer. Receive and ID as an argument via an (int *).
  */
 
 void *consumer(void *ptr) {
@@ -80,9 +81,9 @@ void *consumer(void *ptr) {
 } /* consumer() */
 
 /*
- * Start a number of producers indicated by the first argument, and a number of
- * consumers indicated by the second argument. Wait on all threads at the end to
- * prevent premature exit.
+ * Start a number of producers indicated by the first argument, and a number 
+ * of consumers indicated by the second argument. 
+ * Wait on all threads at the end to prevent premature exit.
  */
 
 int main(int argc, char **argv) {
@@ -91,17 +92,18 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // Initialize num_producers and num_consumers with the values provided by user
-  
-  //int num_producers = atoi(argv[1]);
-  //int num_consumers = atoi(argv[2]);
+  // Remove the two following stataments when implementing your code
+
+  (void)(argc);
+  (void)(argv);
 
   // Initialize the g_buffer_mutex and condition variables
 
   pthread_mutex_init(&g_buffer_mutex, NULL);
 
-  // Since the g_buffer starts out with no characters, g_empty_sem should be 0 and
-  // g_full_sem should be the full size of the g_buffer.
+  // Since the g_buffer starts out with no characters, 
+  // g_empty_sem should be 0 and g_full_sem should be the full 
+  // size of the g_buffer.
 
   sem_init(&g_empty_sem, 0, 0);
   sem_init(&g_full_sem, 0, BUF_SIZE);

@@ -14,7 +14,8 @@ int g_num_o2 = 0;
 int g_num_n2 = 0;
 
 // The semaphores are named according to the molecule that waits on it.
-// For example, create_o3 waits on g_sig_o3, which must be signaled by create_o2.
+// For example, create_o3 waits on g_sig_o3, which must be signaled by 
+// create_o2.
 // g_sig_basic must be held whenever any molecule is being formed
 // (including basic N and O atoms).
 // You don't have to use these, if there's a different method you'd prefer.
@@ -34,6 +35,10 @@ void *create_oxygen(void *ptr) {
   int how_many = *((int *) ptr);
   free(ptr);
   ptr = NULL;
+
+  // Remove the following line when implementing your code
+
+  (void) (how_many);
 
   // Add your code to create how_many nitrogen atoms
 
@@ -57,6 +62,10 @@ void *create_nitrogen(void *ptr) {
   free(ptr);
   ptr = NULL;
 
+  // Remove the following line when implementing your code
+
+  (void) (how_many);
+
   // Add your code to create how_many nitrogen atoms
 
   // Print this for each atom created:
@@ -71,6 +80,11 @@ void *create_nitrogen(void *ptr) {
  */
 
 void *create_n2(void *ptr) {
+
+  // Remove the following line when implementing your code
+
+  (void) (ptr);
+
   while (1) {
     // Add your code to wait for the proper signal.
 
@@ -89,18 +103,28 @@ void *create_n2(void *ptr) {
  */
 
 void *create_o2(void *ptr) {
+
+  // Remove the following line when implementing your code
+
+  (void) (ptr);
+
   while (1) {
     // Add your code to consume two O atoms and produce one O2 molecule
 
     printf("Two atoms of oxygen combined to produce one molecule of O2.\n");
   }
-} /* create_os() */
+} /* create_o2() */
 
 /*
  * Form NO2 molecules, by combining N2 and O2 molecules.
  */
 
 void *create_no2(void *ptr) {
+
+  // Remove the following line when implementing your code
+
+  (void) (ptr);
+
   while (1) {
     // Add your code to consume one N2 molecule and two O2 molecules and
     // produce two NO2 molecules
@@ -115,6 +139,11 @@ void *create_no2(void *ptr) {
  */
 
 void *create_o3(void *ptr) {
+
+  // Remove the following line when implementing your code
+
+  (void) (ptr);
+  
   while (1) {
     // Add your code to consume three O2 molecules and produce two O3 molecules
 
@@ -136,11 +165,10 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // Initialize number of oxygen and nitrogen atoms with the values provided
-  // by the user.
-  
-  int num_oxygen = atoi(argv[1]);
-  int num_nitrogen = atoi(argv[2]);
+  // Remove the two following stataments when implementing your code
+
+  (void)(argc);
+  (void)(argv);
 
   // The semaphores should all be initialized to 0, except for g_sig_basic,
   // since there is not enough material to construct any molecules except
