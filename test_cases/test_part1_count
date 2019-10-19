@@ -1,0 +1,25 @@
+#! /bin/bash
+
+rm -rf out.txt
+
+N=20
+
+part1 $N $N > out.txt
+
+consumed=`cat out.txt | grep consumed`
+produced=`cat out.txt | grep produced`
+
+for ((i=1;i<$N;i++)); do
+    #echo $i
+    consume_count=`cat out.txt | grep " $i consumed" | wc -l`
+    #echo $consume_count
+    produce_count=`cat out.txt | grep " $i produced" | wc -l`
+    if [[ ${consume_count} -ne 13 ]]; then
+        echo "${consume_count} != 13"
+        exit 1
+    elif [[ ${produce_count} -ne 13 ]]; then
+        echo "${produce_count} != 13"
+        exit 1
+    fi
+done
+

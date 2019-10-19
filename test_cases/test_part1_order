@@ -1,0 +1,12 @@
+#! /bin/bash
+
+rm -rf out.txt
+
+part1 20 20 > out.txt
+
+consumed=`cat out.txt | grep consumed | cut -d ' ' -f 4`
+produced=`cat out.txt | grep produced | cut -d ' ' -f 4`
+
+diff <(echo $consumed) <(echo $produced)
+exit $?
+

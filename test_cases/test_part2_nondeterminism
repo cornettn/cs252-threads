@@ -1,0 +1,12 @@
+#!/bin/bash
+
+O_COUNT=1000
+N_COUNT=1000
+timeout 1 stdbuf -oL ./part2 $O_COUNT $N_COUNT > p2out_nd1.txt
+timeout 1 stdbuf -oL ./part2 $O_COUNT $N_COUNT > p2out_nd2.txt
+
+if (cmp -s p2out_nd1.txt p2out_nd2.txt); then
+	echo -e "\e[31mCode may not be nondeterministic!\e[0m"
+else
+	echo -e "\e[32mTest Passed, code is nondeterministic!\e[0m"
+fi
