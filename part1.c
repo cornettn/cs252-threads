@@ -16,6 +16,7 @@ bounded_buffer g_buffer;
 
 pthread_mutex_t g_buffer_mutex;
 
+
 // g_empty_sem is the number of characters in the g_buffer, 
 // that need to be emptied.
 // Producers should signal g_empty_sem and consumers should wait on it.
