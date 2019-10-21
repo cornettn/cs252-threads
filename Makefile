@@ -18,3 +18,9 @@ git:
 .PHONY: git
 clean:
 	rm -f $(PARTS)
+	
+.PHONEY: submit_final
+submit_final:
+	@git tag -fa v1.0 -m "Final"
+	@git push -f --tags
+	@echo "Final submission complete"
