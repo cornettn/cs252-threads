@@ -50,7 +50,7 @@ int enqueue(char c) {
 
 int dequeue() {
   int val = g_buffer.buf[g_buffer.head];
-  g_buffer.head = (g_buffer->head + 1) % BUF_SIZE;
+  g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
   g_buffer_size--;
   return val;
 }
