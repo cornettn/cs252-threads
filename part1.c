@@ -42,15 +42,15 @@ int enqueue(char c) {
     return BLOCK;
   }
 
-  g_buffer->buf[g_buffer->tail] = c;
-  g_buffer->tail = (g_buffer->tail + 1) % BUF_SIZE;
+  g_buffer.buf[g_buffer.tail] = c;
+  g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
   g_buffer_size++;
   return SUCCESS;
 }
 
 int dequeue() {
-  int val = g_buffer->buf[g_buffer->head];
-  g_buffer->head = (g_buffer->head + 1) % BUF_SIZE;
+  int val = g_buffer.buf[g_buffer.head];
+  g_buffer.head = (g_buffer->head + 1) % BUF_SIZE;
   g_buffer_size--;
   return val;
 }
