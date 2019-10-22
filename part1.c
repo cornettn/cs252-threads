@@ -131,8 +131,14 @@ int main(int argc, char **argv) {
   pthread_t thrd1 = 0;
   pthread_t thrd2 = 0;
 
-  pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) 1);
-  pthread_create(&thrd2, NULL, (void * (*)(void *)) consumer, (void *) 2);
+  int *thrd_id_1 = NULL;
+  int *thrd_id_2 = NULL;
+
+  *thrd_id_1 = 1;
+  *thrd_id_2 = 2;
+
+  pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) thrd_id_1);
+  pthread_create(&thrd2, NULL, (void * (*)(void *)) consumer, (void *) thrd_id_2);
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
