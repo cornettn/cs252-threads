@@ -172,7 +172,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < num_producers; i++) {
     pthread_t thrd = 0;
     int *id = (int *) malloc(sizeof(int));
-    *id = num_thrd++;
+    *id = num_thrds++;
     pthread_create(&thrd, NULL, (void * (*)(void *)) producer, (void *) id);
     producers[i] = thrd;
   }
@@ -183,7 +183,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < num_consumers; i++) {
     pthread_t thrd = 0;
     int *id = (int *) malloc(sizeof(int));
-    *id = num_thrd++;
+    *id = num_thrds++;
     pthread_create(&thrd, NULL, (void * (*)(void *)) consumer, (void *) id);
     consumers[i] = thrd;
   }
