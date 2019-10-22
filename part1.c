@@ -128,11 +128,11 @@ int main(int argc, char **argv) {
   // Add your code to create the threads.
   // Make sure to allocate and pass the arguments correctly.
 
-  pthread_t thrd1 = NULL;
-  pthread_t thrd2 = NULL;
+  pthread_t thrd1 = 0;
+  pthread_t thrd2 = 0;
 
   pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) 1);
-  pthread_create(&thrd2, NULL, (voi d* (*)(void *)) consumer, (void *) 2);
+  pthread_create(&thrd2, NULL, (void * (*)(void *)) consumer, (void *) 2);
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
