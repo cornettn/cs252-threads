@@ -6,11 +6,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define SUCCESS (0)
+#define BLOCK (-1)
+
 // The producers add the characters in g_prod_str to the g_buffer, in order.
 
 char *g_prod_str = "The greatest teacher, failure is.";
 
 bounded_buffer g_buffer;
+
+// This is the number of characters in the buffer at any given time
+
+int g_buffer_size = 0;
 
 // This mutex must be held whenever you use the g_buffer.
 
@@ -28,6 +35,25 @@ sem_t g_empty_sem;
 // should signal it, and producers should wait on it.
 
 sem_t g_full_sem;
+
+
+int enqueue(char c) {
+  if (g_buffer_size == BUF_SIZE) {
+    return BLOCK;
+  }
+
+  g_buffer->buf[g_buffer->tail] = c;
+  g_buffer->tail = (g_buffer->tail + 1) % BUF_SIZE;
+  g_buffer_size++;
+  return SUCCESS;
+}
+
+int dequeue() {
+  int val = g_buffer->buf[g_buffer->head];
+  g_buffer->head = (g_buffer->head + 1) % BUF_SIZE;
+  g_buffer_size--;
+  return val;
+}
 
 /*
  * Produce the characters (that is, add them to the g_buffer) from g_prod_str,
@@ -47,13 +73,19 @@ void *producer(void *ptr) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then add g_prod_str[i] to the g_buffer.
 
-    printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
 
     sem_wait(&g_full_sem);
-
     pthread_mutex_lock(&g_buffer_mutex);
+    int val = enqueue(g_prod_str[i]);
     pthread_mutex_unlock(&g_buffer_mutex);
+
+    if (val == BLOCK) {
+      i--;
+      continue;
+    }
+
     sem_post(&g_empty_sem);
+    printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
 
   }
 
@@ -80,15 +112,12 @@ void *consumer(void *ptr) {
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
-    char c = g_prod_str[i];
-
-    printf("Thread %d consumed %c\n", thread_id, c);
-
     sem_wait(&g_empty_sem);
-
     pthread_mutex_lock(&g_buffer_mutex);
+    char c = dequeue()
     pthread_mutex_unlock(&g_buffer_mutex);
     sem_post(&g_full_sem);
+    printf("Thread %d consumed %c\n", thread_id, c);
   }
 
   pthread_exit(0);
