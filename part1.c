@@ -49,12 +49,12 @@ void *producer(void *ptr) {
 
     printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
 
-    sem_wait(g_full_sem);
+    sem_wait(&g_full_sem);
 
     pthread_mutex_lock(&g_buffer_mutex);
     printf("one\n");
-    pthread_ mutex_unlock(&g_buffer_mutex);
-    sem_post(g_empty_sem);
+    pthread_mutex_unlock(&g_buffer_mutex);
+    sem_post(&g_empty_sem);
 
   }
 
@@ -85,13 +85,13 @@ void *consumer(void *ptr) {
 
     printf("Thread %d consumed %c\n", thread_id, c);
 
-    sem_wait(g_empty_sem);
+    sem_wait(&g_empty_sem);
 
     pthread_mutex_lock(&g_buffer_mutex);
     printf("two\n");
 
-    pthread_ mutex_unlock(&g_buffer_mutex);
-    sem_post(g_full_sem);
+    pthread_mutex_unlock(&g_buffer_mutex);
+    sem_post(&g_full_sem);
   }
 
   pthread_exit(0);
