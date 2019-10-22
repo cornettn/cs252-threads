@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
   }
 
   for (int i = 0; i < num_consumers; i++) {
-    pthread_join(conusmers[i], NULL);
+    pthread_join(consumers[i], NULL);
   }
 
   pthread_mutex_destroy(&g_buffer_mutex);
