@@ -114,7 +114,7 @@ void *consumer(void *ptr) {
 
     sem_wait(&g_empty_sem);
     pthread_mutex_lock(&g_buffer_mutex);
-    char c = dequeue()
+    char c = dequeue();
     pthread_mutex_unlock(&g_buffer_mutex);
     sem_post(&g_full_sem);
     printf("Thread %d consumed %c\n", thread_id, c);
