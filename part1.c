@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
   int num_thrds = 0;
 
   int num_producers = atoi(argv[1]);
-  pthread_t *producers = (pthread *)
+  pthread_t *producers = (pthread_t *)
     malloc(num_producers * sizeof(pthread_t));
   for (int i = 0; i < num_producers; i++) {
     pthread_t thrd = 0;
@@ -178,7 +178,7 @@ int main(int argc, char **argv) {
   }
 
   int num_consumers = atoi(argv[2]);
-  pthread_t *consumers = (pthread *)
+  pthread_t *consumers = (pthread_t *)
     malloc(num_consumers * sizeof(pthread_t));
   for (int i = 0; i < num_consumers; i++) {
     pthread_t thrd = 0;
