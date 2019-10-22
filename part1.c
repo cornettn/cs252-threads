@@ -52,7 +52,6 @@ void *producer(void *ptr) {
     sem_wait(&g_full_sem);
 
     pthread_mutex_lock(&g_buffer_mutex);
-    printf("one\n");
     pthread_mutex_unlock(&g_buffer_mutex);
     sem_post(&g_empty_sem);
 
@@ -88,8 +87,6 @@ void *consumer(void *ptr) {
     sem_wait(&g_empty_sem);
 
     pthread_mutex_lock(&g_buffer_mutex);
-    printf("two\n");
-
     pthread_mutex_unlock(&g_buffer_mutex);
     sem_post(&g_full_sem);
   }
