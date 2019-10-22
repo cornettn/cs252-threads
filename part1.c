@@ -17,21 +17,21 @@ bounded_buffer g_buffer;
 pthread_mutex_t g_buffer_mutex;
 
 
-// g_empty_sem is the number of characters in the g_buffer, 
+// g_empty_sem is the number of characters in the g_buffer,
 // that need to be emptied.
 // Producers should signal g_empty_sem and consumers should wait on it.
 
 sem_t g_empty_sem;
 
-// g_full_sem is the opposite of g_empty_sem. It is the number of 
-// unfilled slots in the g_buffer that need to be filled. Consumers 
+// g_full_sem is the opposite of g_empty_sem. It is the number of
+// unfilled slots in the g_buffer that need to be filled. Consumers
 // should signal it, and producers should wait on it.
 
 sem_t g_full_sem;
 
 /*
  * Produce the characters (that is, add them to the g_buffer) from g_prod_str,
- *  in order. Signal consumers appropriately after each character. 
+ *  in order. Signal consumers appropriately after each character.
  * Receive an ID via an (int *).
  */
 
@@ -48,6 +48,14 @@ void *producer(void *ptr) {
     // then add g_prod_str[i] to the g_buffer.
 
     printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
+
+    sem_wait(g_full_sem);
+
+    pthread_mutex_lock(&g_buffer_mutex);
+    printf("one\n");
+    pthread_ mutex_unlock(&g_buffer_mutex);
+    sem_post(g_empty_sem);
+
   }
 
   pthread_exit(0);
@@ -56,7 +64,7 @@ void *producer(void *ptr) {
 /*
  * Consume characters from the g_buffer. Stop after consuming the length of
  * g_prod_str, meaning that if an equal number of consumers and producers are
- * started, they will all exit. Signal producers appropriately of new free 
+ * started, they will all exit. Signal producers appropriately of new free
  * space in the g_buffer. Receive and ID as an argument via an (int *).
  */
 
@@ -76,14 +84,22 @@ void *consumer(void *ptr) {
     char c = g_prod_str[i];
 
     printf("Thread %d consumed %c\n", thread_id, c);
+
+    sem_wait(g_empty_sem);
+
+    pthread_mutex_lock(&g_buffer_mutex);
+    printf("two\n");
+
+    pthread_ mutex_unlock(&g_buffer_mutex);
+    sem_post(g_full_sem);
   }
 
   pthread_exit(0);
 } /* consumer() */
 
 /*
- * Start a number of producers indicated by the first argument, and a number 
- * of consumers indicated by the second argument. 
+ * Start a number of producers indicated by the first argument, and a number
+ * of consumers indicated by the second argument.
  * Wait on all threads at the end to prevent premature exit.
  */
 
@@ -102,8 +118,8 @@ int main(int argc, char **argv) {
 
   pthread_mutex_init(&g_buffer_mutex, NULL);
 
-  // Since the g_buffer starts out with no characters, 
-  // g_empty_sem should be 0 and g_full_sem should be the full 
+  // Since the g_buffer starts out with no characters,
+  // g_empty_sem should be 0 and g_full_sem should be the full
   // size of the g_buffer.
 
   sem_init(&g_empty_sem, 0, 0);
@@ -112,10 +128,18 @@ int main(int argc, char **argv) {
   // Add your code to create the threads.
   // Make sure to allocate and pass the arguments correctly.
 
+  pthread_t thrd1 = NULL;
+  pthread_t thrd2 = NULL;
+
+  pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) 1);
+  pthread_create(&thrd2, NULL, (voi d* (*)(void *)) consumer, (void *) 2);
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
+
+  pthread_join(thrd1, NULL);
+  pthread_join(thrd2, NULL);
 
 
 
