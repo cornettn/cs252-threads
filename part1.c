@@ -155,8 +155,8 @@ int main(int argc, char **argv) {
   // Add your code to create the threads.
   // Make sure to allocate and pass the arguments correctly.
 
-  pthread_t thrd1 = 0;
-  pthread_t thrd2 = 0;
+//  pthread_t thrd1 = 0;
+//  pthread_t thrd2 = 0;
 
 //  int *thrd_id_1 = (int *) malloc(sizeof(int));
 //  int *thrd_id_2 = (int *) malloc(sizeof(int));
