@@ -123,6 +123,7 @@ void *consumer(void *ptr) {
   pthread_exit(0);
 } /* consumer() */
 
+
 /*
  * Start a number of producers indicated by the first argument, and a number
  * of consumers indicated by the second argument.
@@ -163,17 +164,44 @@ int main(int argc, char **argv) {
   *thrd_id_1 = 1;
   *thrd_id_2 = 2;
 
-  pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) thrd_id_1);
-  pthread_create(&thrd2, NULL, (void * (*)(void *)) consumer, (void *) thrd_id_2);
+  int num_thrds = 0;
+
+  int num_producers = atoi(argv[1]);
+  pthread_t *producers = (pthread *)
+    malloc(num_producers * sizeof(pthread_t));
+  for (int i = 0; i < num_producers; i++) {
+    pthread_t thrd = 0;
+    int *id = (int *) malloc(sizeof(int));
+    *id = num_thrd++;
+    pthread_create(&thrd, NULL, (void * (*)(void *)) producer, (void *) id);
+    producers[i] = thrd;
+  }
+
+  int num_consumers = atoi(argv[2]);
+  pthread_t *consumers = (pthread *)
+    malloc(num_consumers * sizeof(pthread_t));
+  for (int i = 0; i < num_consumers; i++) {
+    pthread_t thrd = 0;
+    int *id = (int *) malloc(sizeof(int));
+    *id = num_thrd++;
+    pthread_create(&thrd, NULL, (void * (*)(void *)) consumer, (void *) id);
+    consumers[i] = thrd;
+  }
+
+  // pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) thrd_id_1);
+  // pthread_create(&thrd2, NULL, (void * (*)(void *)) consumer, (void *) thrd_id_2);
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
 
-  pthread_join(thrd1, NULL);
-  pthread_join(thrd2, NULL);
+  for (int i = 0; i < num_producers; i++) {
+    pthread_join(producers[i], NULL);
+  }
 
-
+  for (int i = 0; i < num_consumers; i++) {
+    pthread_join(conusmers[i], NULL);
+  }
 
   pthread_mutex_destroy(&g_buffer_mutex);
 
