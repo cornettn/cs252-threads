@@ -131,8 +131,8 @@ int main(int argc, char **argv) {
   pthread_t thrd1 = 0;
   pthread_t thrd2 = 0;
 
-  int *thrd_id_1 = NULL;
-  int *thrd_id_2 = NULL;
+  int *thrd_id_1 = (int *) malloc(sizeof(int));
+  int *thrd_id_2 = (int *) malloc(sizeof(int));
 
   *thrd_id_1 = 1;
   *thrd_id_2 = 2;
