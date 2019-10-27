@@ -78,6 +78,7 @@ int dequeue(int index) {
 
   if (index < g_indices_consumed) {
     pthread_mutex_unlock(&g_buffer_mutex);
+  sem_post(&g_full_sem);
     return BLOCK;
   }
 
