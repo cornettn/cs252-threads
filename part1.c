@@ -17,8 +17,8 @@ bounded_buffer g_buffer = {0};
 
 // This is the number of characters in the buffer at any given time
 
-int g_indices_produced = 0;
-int g_indices_consumed = 0;
+int g_indices_produced = -1;
+int g_indices_consumed = -1;
 
 // This mutex must be held whenever you use the g_buffer.
 
