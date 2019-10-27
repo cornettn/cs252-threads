@@ -42,10 +42,12 @@ int enqueue(char c, int index) {
   sem_wait(&g_full_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
+/*
   if (index < g_indices_produced) {
     pthread_mutex_unlock(&g_buffer_mutex);
     return SUCCESS;
   }
+*/
 
 /*
   if (g_buffer_size == BUF_SIZE) {
@@ -57,7 +59,7 @@ int enqueue(char c, int index) {
 
   g_buffer.buf[g_buffer.tail] = c;
   g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
-  g_indices_produced = index;
+//  g_indices_produced = index;
 
 //  printf("----Producer: Tail is now at index %d----", g_buffer.tail);
 
@@ -68,25 +70,11 @@ int enqueue(char c, int index) {
 }
 
 int dequeue(int index) {
-  printf("Wait");
   sem_wait(&g_empty_sem);
-  printf("Done Waiting\n");
-  fflush(NULL);
   pthread_mutex_lock(&g_buffer_mutex);
-
-//  printf("--Consumer: Dequeue %c at index %d--\n", g_buffer.buf[g_buffer.head], g_buffer.head);
-
-  if (index < g_indices_consumed) {
-    pthread_mutex_unlock(&g_buffer_mutex);
-  sem_post(&g_full_sem);
-    return BLOCK;
-  }
 
   int val = g_buffer.buf[g_buffer.head];
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
-  g_indices_consumed = index;
-
-//  printf("----Consumer: Head is now at index %d----", g_buffer.head);
 
   pthread_mutex_unlock(&g_buffer_mutex);
   sem_post(&g_full_sem);
@@ -190,16 +178,11 @@ int main(int argc, char **argv) {
   // Add your code to create the threads.
   // Make sure to allocate and pass the arguments correctly.
 
-//  pthread_t thrd1 = 0;
-//  pthread_t thrd2 = 0;
-
-//  int *thrd_id_1 = (int *) malloc(sizeof(int));
-//  int *thrd_id_2 = (int *) malloc(sizeof(int));
-
-//  *thrd_id_1 = 1;
-//  *thrd_id_2 = 2;
+  /* This is used to create the thread id's */
 
   int num_thrds = 0;
+
+  /* Create all of the producers */
 
   int num_producers = atoi(argv[1]);
   pthread_t *producers = (pthread_t *)
@@ -212,6 +195,8 @@ int main(int argc, char **argv) {
     pthread_create(&producers[i], NULL, (void * (*)(void *)) producer,
         (void *) id);
   }
+
+  /* Create all of the consumers */
 
   int num_consumers = atoi(argv[2]);
   pthread_t *consumers = (pthread_t *)
@@ -239,7 +224,7 @@ int main(int argc, char **argv) {
 
   printf("Join Consumers\n");
   for (int i = 0; i < num_consumers; i++) {
-    printf("--Join consumer %d\n", i);
+//    printf("--Join consumer %d\n", i);
     pthread_join(consumers[i], NULL);
   }
 
