@@ -4,7 +4,7 @@ rm -rf out.txt
 
 N=20
 
-part1 $N $N > out.txt
+./part1 $N $N > out.txt
 
 consumed=`cat out.txt | grep consumed`
 produced=`cat out.txt | grep produced`
@@ -14,12 +14,20 @@ for ((i=1;i<$N;i++)); do
     consume_count=`cat out.txt | grep " $i consumed" | wc -l`
     #echo $consume_count
     produce_count=`cat out.txt | grep " $i produced" | wc -l`
-    if [[ ${consume_count} -ne 13 ]]; then
-        echo "${consume_count} != 13"
+    
+    if [[ ${produce_count} -ne 33 ]]; then
+        echo -e "Thread ${i} produced ${produce_count} != 33"
+        echo -e "\e[31mtest_part1_count failed.\033[0m"
         exit 1
-    elif [[ ${produce_count} -ne 13 ]]; then
-        echo "${produce_count} != 13"
+    elif [[ ${consume_count} -ne 33 ]]; then
+        echo -e "Thread ${i} consumed ${consume_count} != 33"
+        echo -e "\e[31mtest_part1_count failed.\033[0m"
         exit 1
     fi
 done
+
+rm -rf out.txt
+
+echo -e "\e[32mtest_part1_count passed!\033[0m"
+
 
