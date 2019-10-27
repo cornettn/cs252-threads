@@ -38,20 +38,33 @@ sem_t g_full_sem;
 
 
 int enqueue(char c) {
+  sem_wait(&g_full_sem);
+  pthread_mutex_lock(&g_mutex);
+
+/*
   if (g_buffer_size == BUF_SIZE) {
     return BLOCK;
   }
+*/
 
   g_buffer.buf[g_buffer.tail] = c;
   g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
-  g_buffer_size++;
+  pthread_mutex_unlock(&g_mutex);
+  sem_post(&g_empty_sem);
+
   return SUCCESS;
 }
 
 int dequeue() {
+  sem_wait(&g_empty_sem);
+  pthread_mutex_lock(&g_mutex);
+
   int val = g_buffer.buf[g_buffer.head];
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
-  g_buffer_size--;
+
+  pthread_mutex_unlock(&g_mutex);
+  sem_post(&g_full_sem);
+
   return val;
 }
 
@@ -74,18 +87,12 @@ void *producer(void *ptr) {
     // then add g_prod_str[i] to the g_buffer.
 
 
-    sem_wait(&g_full_sem);
-    pthread_mutex_lock(&g_buffer_mutex);
     int val = enqueue(g_prod_str[i]);
 
     if (val == BLOCK) {
       i--;
-      pthread_mutex_unlock(&g_buffer_mutex);
       continue;
     }
-
-    pthread_mutex_unlock(&g_buffer_mutex);
-    sem_post(&g_empty_sem);
 
     printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
 
@@ -114,11 +121,7 @@ void *consumer(void *ptr) {
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
-    sem_wait(&g_empty_sem);
-    pthread_mutex_lock(&g_buffer_mutex);
     char c = dequeue();
-    pthread_mutex_unlock(&g_buffer_mutex);
-    sem_post(&g_full_sem);
 
     printf("Thread %d consumed %c\n", thread_id, c);
   }
