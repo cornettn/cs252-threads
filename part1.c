@@ -39,7 +39,7 @@ sem_t g_full_sem;
 
 int enqueue(char c) {
   sem_wait(&g_full_sem);
-  pthread_mutex_lock(&g_mutex);
+  pthread_mutex_lock(&g_buffer_mutex);
 
 /*
   if (g_buffer_size == BUF_SIZE) {
@@ -49,7 +49,7 @@ int enqueue(char c) {
 
   g_buffer.buf[g_buffer.tail] = c;
   g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
-  pthread_mutex_unlock(&g_mutex);
+  pthread_mutex_unlock(&g_buffer_mutex);
   sem_post(&g_empty_sem);
 
   return SUCCESS;
@@ -57,12 +57,12 @@ int enqueue(char c) {
 
 int dequeue() {
   sem_wait(&g_empty_sem);
-  pthread_mutex_lock(&g_mutex);
+  pthread_mutex_lock(&g_buffer_mutex);
 
   int val = g_buffer.buf[g_buffer.head];
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
 
-  pthread_mutex_unlock(&g_mutex);
+  pthread_mutex_unlock(&g_buffer_mutex);
   sem_post(&g_full_sem);
 
   return val;
