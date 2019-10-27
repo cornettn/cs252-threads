@@ -47,12 +47,12 @@ int enqueue(char c) {
   }
 */
 
-  printf("--Place %c at index %d--\n", c, g_buffer.tail);
+  printf("--Producer: Place %c at index %d--\n", c, g_buffer.tail);
 
   g_buffer.buf[g_buffer.tail] = c;
   g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
 
-  printf("----Tail is now at index %d----", g_buffer.tail);
+  printf("----Producer: Tail is now at index %d----", g_buffer.tail);
 
   pthread_mutex_unlock(&g_buffer_mutex);
   sem_post(&g_empty_sem);
@@ -64,12 +64,12 @@ int dequeue() {
   sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-  printf("--Dequeue %c at index %d--\n", g_buffer.buf[g_buffer.head], g_buffer.head);
+  printf("--Consumer: Dequeue %c at index %d--\n", g_buffer.buf[g_buffer.head], g_buffer.head);
 
   int val = g_buffer.buf[g_buffer.head];
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
 
-  printf("----Head is now at index %d----", g_buffer.head);
+  printf("----Consumer: Head is now at index %d----", g_buffer.head);
 
   pthread_mutex_unlock(&g_buffer_mutex);
   sem_post(&g_full_sem);
