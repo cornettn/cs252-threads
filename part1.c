@@ -17,7 +17,7 @@ bounded_buffer g_buffer;
 
 // This is the number of characters in the buffer at any given time
 
-int g_buffer_size = 0;
+int g_indices_produced = -1;
 
 // This mutex must be held whenever you use the g_buffer.
 
@@ -37,12 +37,11 @@ sem_t g_empty_sem;
 sem_t g_full_sem;
 
 
-int enqueue(char c) {
+int enqueue(char c, int index) {
   sem_wait(&g_full_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-  char *check = strchr(g_buffer.buf, c);
-  if (check != NULL) {
+  if (index < g_indices_produced) {
     pthread_mutex_unlock(&g_buffer_mutex);
     return SUCCESS;
   }
@@ -57,6 +56,7 @@ int enqueue(char c) {
 
   g_buffer.buf[g_buffer.tail] = c;
   g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
+  g_indices_produced = index;
 
   printf("----Producer: Tail is now at index %d----", g_buffer.tail);
 
