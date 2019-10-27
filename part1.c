@@ -162,11 +162,6 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // Remove the two following stataments when implementing your code
-
-  (void)(argc);
-  (void)(argv);
-
   // Initialize the g_buffer_mutex and condition variables
 
   pthread_mutex_init(&g_buffer_mutex, NULL);
