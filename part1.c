@@ -143,7 +143,7 @@ void *consumer(void *ptr) {
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
-    char c = dequeue();
+    char c = dequeue(i);
 
     if (c != BLOCK) {
       printf("Thread %d consumed %c\n", thread_id, c);
