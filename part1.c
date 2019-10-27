@@ -17,8 +17,8 @@ bounded_buffer g_buffer;
 
 // This is the number of characters in the buffer at any given time
 
-int g_indices_produced = -1;
-int g_indices_consumed = -1;
+size_t g_indices_produced = 0;
+size_t g_indices_consumed = 0;
 
 // This mutex must be held whenever you use the g_buffer.
 
@@ -96,12 +96,12 @@ void *producer(void *ptr) {
   printf("Producer %d starting\n", thread_id);
   fflush(NULL);
 
-  for (int i = 0; i < strlen(g_prod_str); i++) {
+  for (size_t i = 0; i < strlen(g_prod_str); i++) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then add g_prod_str[i] to the g_buffer.
 
     int val = BLOCK;
-    if (i > g_indices_produced) {
+    if (i >= g_indices_produced) {
       val = enqueue(g_prod_str[i]);
       g_indices_produced = i;
     }
@@ -129,13 +129,13 @@ void *consumer(void *ptr) {
   printf("Consumer %d starting\n", thread_id);
   fflush(NULL);
 
-  for (int i = 0; i < strlen(g_prod_str); i++) {
+  for (size_t i = 0; i < strlen(g_prod_str); i++) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
     char c = BLOCK;
-    if (i > g_indices_consumed) {
+    if (i >= g_indices_consumed) {
       c = dequeue();
       g_indices_consumed = i;
     }
