@@ -102,7 +102,7 @@ void *producer(void *ptr) {
     // then add g_prod_str[i] to the g_buffer.
 
 
-    int val = enqueue(g_prod_str[i]);
+    int val = enqueue(g_prod_str[i], i);
 
     if (val == BLOCK) {
       i--;
