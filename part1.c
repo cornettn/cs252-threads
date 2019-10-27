@@ -60,24 +60,24 @@ int enqueue(int index) {
   return value;
 }
 
-int dequeue() {
+int dequeue(int index) {
+  int value = BLOCK;
 
-  /* Wait until there are characters to be consumed */
-
-  sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-  int val = g_buffer.buf[g_buffer.head];
-  g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
+  if (index >= g_indices_consumed) {
+    value = g_buffer.buf[g_buffer.head];
+    g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
+    g_indices_consumed = index;
+  }
+  else {
+    printf("buf[%d] is already consumed\n");
+  }
 
   pthread_mutex_unlock(&g_buffer_mutex);
 
-  /* Let everything know that there is another space available in the buffer
-   * to be used */
 
-  sem_post(&g_full_sem);
-
-  return val;
+  return value;
 }
 
 /*
@@ -141,9 +141,19 @@ void *consumer(void *ptr) {
     // the following line.
 
     char c = BLOCK;
-    c = dequeue();
+
+    /* Wait until there are characters to be consumed */
+
+    sem_wait(&g_empty_sem);
+
+    c = dequeue(i);
 
     if (c != BLOCK) {
+
+      /* Let everything know that there is another space available in
+       * the buffer to be used */
+
+      sem_post(&g_full_sem);
       printf("Thread %d consumed %c\n", thread_id, c);
     }
   }
