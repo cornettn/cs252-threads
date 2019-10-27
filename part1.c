@@ -41,6 +41,13 @@ int enqueue(char c) {
   sem_wait(&g_full_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
+  char *check = NULL;
+  check = strchr(check, c);
+  if (check == NULL) {
+    pthread_mutex_unlock(&g_buffer_mutex);
+    return SUCCESS;
+  }
+
 /*
   if (g_buffer_size == BUF_SIZE) {
     return BLOCK;
