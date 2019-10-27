@@ -216,6 +216,7 @@ int main(int argc, char **argv) {
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
 
+  printf("Join them\n");
   for (int i = 0; i < num_producers; i++) {
     pthread_join(producers[i], NULL);
   }
