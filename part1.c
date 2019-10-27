@@ -38,7 +38,7 @@ sem_t g_empty_sem;
 sem_t g_full_sem;
 
 
-int enqueue(char c, int index) {
+int enqueue(char c) {
   sem_wait(&g_full_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
@@ -69,7 +69,7 @@ int enqueue(char c, int index) {
   return SUCCESS;
 }
 
-int dequeue(int index) {
+int dequeue() {
   sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
@@ -101,7 +101,7 @@ void *producer(void *ptr) {
     // then add g_prod_str[i] to the g_buffer.
 
 
-    int val = enqueue(g_prod_str[i], i);
+    int val = enqueue(g_prod_str[i]);
 
     if (val == BLOCK) {
       i--;
@@ -135,7 +135,7 @@ void *consumer(void *ptr) {
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
-    char c = dequeue(i);
+    char c = dequeue();
 
     if (c != BLOCK) {
       printf("Thread %d consumed %c\n", thread_id, c);
