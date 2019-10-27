@@ -239,6 +239,9 @@ int main(int argc, char **argv) {
 //  printf("Joined\n");
 
   pthread_mutex_destroy(&g_buffer_mutex);
+  sem_destroy(&g_full_sem);
+  sem_destroy(&g_empty_sem);
+
 
   return 0;
 } /* main() */
