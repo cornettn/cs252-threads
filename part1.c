@@ -216,14 +216,17 @@ int main(int argc, char **argv) {
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
 
-  printf("Join them\n");
+  printf("Join producers\n");
   for (int i = 0; i < num_producers; i++) {
     pthread_join(producers[i], NULL);
   }
 
+  printf("Join Consumers\n");
   for (int i = 0; i < num_consumers; i++) {
     pthread_join(consumers[i], NULL);
   }
+
+  printf("Joined\n");
 
   pthread_mutex_destroy(&g_buffer_mutex);
 
