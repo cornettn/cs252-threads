@@ -96,7 +96,7 @@ void *producer(void *ptr) {
   printf("Producer %d starting\n", thread_id);
   fflush(NULL);
 
-  for (size_t i = 0; i < strlen(g_prod_str); i++) {
+  for (int i = 0; i < strlen(g_prod_str); i++) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then add g_prod_str[i] to the g_buffer.
 
@@ -129,7 +129,7 @@ void *consumer(void *ptr) {
   printf("Consumer %d starting\n", thread_id);
   fflush(NULL);
 
-  for (size_t i = 0; i < strlen(g_prod_str); i++) {
+  for (int i = 0; i < strlen(g_prod_str); i++) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
