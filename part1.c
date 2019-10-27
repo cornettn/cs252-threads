@@ -46,7 +46,7 @@ int enqueue(int index) {
   /* Ensure that we are not queueing the same character twice */
 
   if (index < g_indices_produced) {
-    printf("buf[%d] is blocked\n", index);
+//    printf("buf[%d] is blocked\n", index);
     value = BLOCK;
   }
   else {
@@ -70,9 +70,9 @@ int dequeue(int index) {
     g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
     g_indices_consumed = index;
   }
-  else {
-    printf("buf[%d] is already consumed\n", index);
-  }
+//  else {
+//    printf("buf[%d] is already consumed\n", index);
+//  }
 
   pthread_mutex_unlock(&g_buffer_mutex);
 
