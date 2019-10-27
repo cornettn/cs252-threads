@@ -52,7 +52,7 @@ int enqueue(int index) {
   else {
     g_buffer.buf[g_buffer.tail] = g_prod_str[index];
     g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
-    g_indices_produced = index;
+    g_indices_produced++;
   }
 
   pthread_mutex_unlock(&g_buffer_mutex);
@@ -68,7 +68,7 @@ int dequeue(int index) {
   if (index >= g_indices_consumed) {
     value = g_buffer.buf[g_buffer.head];
     g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
-    g_indices_consumed = index;
+    g_indices_consumed++;
   }
 //  else {
 //    printf("buf[%d] is already consumed\n", index);
