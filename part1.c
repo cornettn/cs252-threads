@@ -223,6 +223,7 @@ int main(int argc, char **argv) {
 
   printf("Join Consumers\n");
   for (int i = 0; i < num_consumers; i++) {
+    printf("--Join consumer %d\n", i);
     pthread_join(consumers[i], NULL);
   }
 
