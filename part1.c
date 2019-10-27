@@ -71,7 +71,7 @@ int dequeue(int index) {
     g_indices_consumed = index;
   }
   else {
-    printf("buf[%d] is already consumed\n", i);
+    printf("buf[%d] is already consumed\n", index);
   }
 
   pthread_mutex_unlock(&g_buffer_mutex);
