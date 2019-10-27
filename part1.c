@@ -100,16 +100,15 @@ void *producer(void *ptr) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then add g_prod_str[i] to the g_buffer.
 
-
-    int val = enqueue(g_prod_str[i]);
-
-    if (val == BLOCK) {
-      i--;
-      continue;
+    int val = BLOCK;
+    if (i > g_indices_produced) {
+      val = enqueue(g_prod_str[i]);
+      g_indices_produced = i;
     }
 
-    printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
-
+    if (val != BLOCK) {
+      printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
+    }
   }
 
   pthread_exit(0);
@@ -135,7 +134,11 @@ void *consumer(void *ptr) {
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
-    char c = dequeue();
+    char c = BLOCK;
+    if (i > g_indices_consumed) {
+      c = dequeue();
+      g_indices_consumed = i;
+    }
 
     if (c != BLOCK) {
       printf("Thread %d consumed %c\n", thread_id, c);
