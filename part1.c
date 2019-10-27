@@ -13,7 +13,7 @@
 
 char *g_prod_str = "Hello, world!";
 
-bounded_buffer g_buffer;
+bounded_buffer g_buffer = {0};
 
 // This is the number of characters in the buffer at any given time
 
@@ -22,46 +22,28 @@ size_t g_indices_consumed = 0;
 
 // This mutex must be held whenever you use the g_buffer.
 
-pthread_mutex_t g_buffer_mutex;
+pthread_mutex_t g_buffer_mutex = {0};
 
 
 // g_empty_sem is the number of characters in the g_buffer,
 // that need to be emptied.
 // Producers should signal g_empty_sem and consumers should wait on it.
 
-sem_t g_empty_sem;
+sem_t g_empty_sem = {0};
 
 // g_full_sem is the opposite of g_empty_sem. It is the number of
 // unfilled slots in the g_buffer that need to be filled. Consumers
 // should signal it, and producers should wait on it.
 
-sem_t g_full_sem;
+sem_t g_full_sem = {0};
 
 
 int enqueue(char c) {
   sem_wait(&g_full_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-/*
-  if (index < g_indices_produced) {
-    pthread_mutex_unlock(&g_buffer_mutex);
-    return SUCCESS;
-  }
-*/
-
-/*
-  if (g_buffer_size == BUF_SIZE) {
-    return BLOCK;
-  }
-*/
-
-//  printf("--Producer: Place %c at index %d--\n", c, g_buffer.tail);
-
   g_buffer.buf[g_buffer.tail] = c;
   g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
-//  g_indices_produced = index;
-
-//  printf("----Producer: Tail is now at index %d----", g_buffer.tail);
 
   pthread_mutex_unlock(&g_buffer_mutex);
   sem_post(&g_empty_sem);
@@ -101,10 +83,7 @@ void *producer(void *ptr) {
     // then add g_prod_str[i] to the g_buffer.
 
     int val = BLOCK;
-//    if (i >= g_indices_produced) {
-      val = enqueue(g_prod_str[i]);
-//      g_indices_produced = i;
-//    }
+    val = enqueue(g_prod_str[i]);
 
     if (val != BLOCK) {
       printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
@@ -135,10 +114,7 @@ void *consumer(void *ptr) {
     // the following line.
 
     char c = BLOCK;
-//    if (i >= g_indices_consumed) {
-      c = dequeue();
-//      g_indices_consumed = i;
-//    }
+    c = dequeue();
 
     if (c != BLOCK) {
       printf("Thread %d consumed %c\n", thread_id, c);
@@ -208,8 +184,6 @@ int main(int argc, char **argv) {
         (void *) id);
   }
 
-  // pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) thrd_id_1);
-  // pthread_create(&thrd2, NULL, (void * (*)(void *)) consumer, (void *) thrd_id_2);
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
@@ -222,7 +196,6 @@ int main(int argc, char **argv) {
 
   printf("Join Consumers\n");
   for (int i = 0; i < num_consumers; i++) {
-//    printf("--Join consumer %d\n", i);
     pthread_join(consumers[i], NULL);
   }
 
