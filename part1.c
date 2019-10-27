@@ -45,7 +45,7 @@ int enqueue(int index) {
 
   /* Ensure that we are not queueing the same character twice */
 
-  if (index < g_indices_produced) {
+  if (index <= g_indices_produced) {
 //    printf("buf[%d] is blocked\n", index);
     value = BLOCK;
   }
