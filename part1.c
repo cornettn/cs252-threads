@@ -101,10 +101,10 @@ void *producer(void *ptr) {
     // then add g_prod_str[i] to the g_buffer.
 
     int val = BLOCK;
-    if (i >= g_indices_produced) {
+//    if (i >= g_indices_produced) {
       val = enqueue(g_prod_str[i]);
-      g_indices_produced = i;
-    }
+//      g_indices_produced = i;
+//    }
 
     if (val != BLOCK) {
       printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
@@ -135,10 +135,10 @@ void *consumer(void *ptr) {
     // the following line.
 
     char c = BLOCK;
-    if (i >= g_indices_consumed) {
+//    if (i >= g_indices_consumed) {
       c = dequeue();
-      g_indices_consumed = i;
-    }
+//      g_indices_consumed = i;
+//    }
 
     if (c != BLOCK) {
       printf("Thread %d consumed %c\n", thread_id, c);
