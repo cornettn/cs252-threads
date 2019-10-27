@@ -18,6 +18,7 @@ bounded_buffer g_buffer;
 // This is the number of characters in the buffer at any given time
 
 int g_indices_produced = -1;
+int g_indices_consumed = -1;
 
 // This mutex must be held whenever you use the g_buffer.
 
@@ -66,14 +67,20 @@ int enqueue(char c, int index) {
   return SUCCESS;
 }
 
-int dequeue() {
+int dequeue(int index) {
   sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
 //  printf("--Consumer: Dequeue %c at index %d--\n", g_buffer.buf[g_buffer.head], g_buffer.head);
 
+  if (index < g_indices_consumed) {
+    pthread_mutex_unlock(&g_buffer_mutex);
+    return BLOCK;
+  }
+
   int val = g_buffer.buf[g_buffer.head];
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
+  g_indices_consumed = index;
 
 //  printf("----Consumer: Head is now at index %d----", g_buffer.head);
 
@@ -138,7 +145,9 @@ void *consumer(void *ptr) {
 
     char c = dequeue();
 
-    printf("Thread %d consumed %c\n", thread_id, c);
+    if (c != BLOCK) {
+      printf("Thread %d consumed %c\n", thread_id, c);
+    }
   }
 
   pthread_exit(0);
