@@ -150,6 +150,7 @@ void *consumer(void *ptr) {
     }
   }
 
+  printf("Exit thread\n");
   pthread_exit(0);
 } /* consumer() */
 
