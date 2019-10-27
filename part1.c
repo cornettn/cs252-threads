@@ -64,7 +64,7 @@ int dequeue() {
   sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-  printf("--Dequeue %c at index %d--\n", c, g_buffer.head);
+  printf("--Dequeue %c at index %d--\n", g_buffer.buf[g_buffer.head], g_buffer.head);
 
   int val = g_buffer.buf[g_buffer.head];
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
