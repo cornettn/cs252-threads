@@ -158,7 +158,7 @@ void *consumer(void *ptr) {
     }
   }
 
-  printf("Exit thread\n");
+//  printf("Exit thread\n");
   pthread_exit(0);
 } /* consumer() */
 
@@ -226,17 +226,17 @@ int main(int argc, char **argv) {
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
 
-  printf("Join producers\n");
+//  printf("Join producers\n");
   for (int i = 0; i < num_producers; i++) {
     pthread_join(producers[i], NULL);
   }
 
-  printf("Join Consumers\n");
+//  printf("Join Consumers\n");
   for (int i = 0; i < num_consumers; i++) {
     pthread_join(consumers[i], NULL);
   }
 
-  printf("Joined\n");
+//  printf("Joined\n");
 
   pthread_mutex_destroy(&g_buffer_mutex);
 
