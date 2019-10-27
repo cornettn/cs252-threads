@@ -207,8 +207,9 @@ int main(int argc, char **argv) {
     pthread_t thrd = 0;
     int *id = (int *) malloc(sizeof(int));
     *id = num_thrds++;
-    pthread_create(&thrd, NULL, (void * (*)(void *)) producer, (void *) id);
     producers[i] = thrd;
+    pthread_create(&producers[i], NULL, (void * (*)(void *)) producer,
+        (void *) id);
   }
 
   int num_consumers = atoi(argv[2]);
@@ -218,8 +219,9 @@ int main(int argc, char **argv) {
     pthread_t thrd = 0;
     int *id = (int *) malloc(sizeof(int));
     *id = num_thrds++;
-    pthread_create(&thrd, NULL, (void * (*)(void *)) consumer, (void *) id);
     consumers[i] = thrd;
+    pthread_create(&consumers[i], NULL, (void * (*)(void *)) consumer,
+        (void *) id);
   }
 
   // pthread_create(&thrd1, NULL, (void * (*)(void *)) producer, (void *) thrd_id_1);
