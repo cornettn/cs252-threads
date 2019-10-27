@@ -17,8 +17,8 @@ bounded_buffer g_buffer = {0};
 
 // This is the number of characters in the buffer at any given time
 
-size_t g_indices_produced = 0;
-size_t g_indices_consumed = 0;
+int g_indices_produced = 0;
+int g_indices_consumed = 0;
 
 // This mutex must be held whenever you use the g_buffer.
 
@@ -38,20 +38,32 @@ sem_t g_empty_sem = {0};
 sem_t g_full_sem = {0};
 
 
-int enqueue(char c) {
-  sem_wait(&g_full_sem);
+int enqueue(int index) {
+  int value = SUCCESS;
+
   pthread_mutex_lock(&g_buffer_mutex);
 
-  g_buffer.buf[g_buffer.tail] = c;
-  g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
+  /* Ensure that we are not queueing the same character twice */
+
+  if (index < g_indices_produced) {
+    printf("buf[%d] is blocked\n", index);
+    value = BLOCK;
+  }
+  else {
+    g_buffer.buf[g_buffer.tail] = g_prod_str[index];
+    g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
+    g_indices_produced = index;
+  }
 
   pthread_mutex_unlock(&g_buffer_mutex);
-  sem_post(&g_empty_sem);
 
-  return SUCCESS;
+  return value;
 }
 
 int dequeue() {
+
+  /* Wait until there are characters to be consumed */
+
   sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
@@ -59,6 +71,10 @@ int dequeue() {
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
 
   pthread_mutex_unlock(&g_buffer_mutex);
+
+  /* Let everything know that there is another space available in the buffer
+   * to be used */
+
   sem_post(&g_full_sem);
 
   return val;
@@ -83,9 +99,20 @@ void *producer(void *ptr) {
     // then add g_prod_str[i] to the g_buffer.
 
     int val = BLOCK;
-    val = enqueue(g_prod_str[i]);
+
+    /* Wait until there is space in the buffer to place another character */
+
+    sem_wait(&g_full_sem);
+
+    /* Insert into the queue */
+
+    val = enqueue(i);
 
     if (val != BLOCK) {
+      /* Let everyting know that there is another character in the buffer
+       * that is ready to be consumed */
+
+      sem_post(&g_empty_sem);
       printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
     }
   }
