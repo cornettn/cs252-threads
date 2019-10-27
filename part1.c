@@ -68,7 +68,10 @@ int enqueue(char c, int index) {
 }
 
 int dequeue(int index) {
+  printf("Wait");
   sem_wait(&g_empty_sem);
+  printf("Done Waiting\n");
+  fflush(NULL);
   pthread_mutex_lock(&g_buffer_mutex);
 
 //  printf("--Consumer: Dequeue %c at index %d--\n", g_buffer.buf[g_buffer.head], g_buffer.head);
