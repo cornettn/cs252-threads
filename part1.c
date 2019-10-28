@@ -65,7 +65,7 @@ int dequeue(int index) {
 
   pthread_mutex_lock(&g_buffer_mutex);
 
-  if (index >= g_indices_consumed) {
+  if (index > g_indices_consumed) {
     value = g_buffer.buf[g_buffer.head];
     g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
     g_indices_consumed++;
