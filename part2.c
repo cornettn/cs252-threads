@@ -16,38 +16,36 @@ int g_num_o2 = 0;
 int g_num_n2 = 0;
 
 // The semaphores are named according to the molecule that waits on it.
-// For example, create_o3 waits on g_sig_o3, which must be signaled by
-// create_o2.
 // g_sig_basic must be held whenever any molecule is being formed
 // (including basic N and O atoms).
-// You don't have to use these, if there's a different method you'd prefer.
 
 sem_t g_sig_basic = {0};
 sem_t g_sig_o2 = {0};
 sem_t g_sig_n2 = {0};
 
+/* These are flags that determine when things are done */
 
 int g_oxy_done = 0;
 int g_nitr_done = 0;
 int g_o2_done = 0;
 int g_n2_done = 0;
 
-/* These mutexes should be held when accessing the number of
- * atoms/ molecules */
-
-pthread_mutex_t g_oxygen_mutex = {0};
-pthread_mutex_t g_nitrogen_mutex = {0};
-pthread_mutex_t g_o2_mutex = {0};
-pthread_mutex_t g_n2_mutex = {0};
-
+/*
+ * This function is used to determine when all the atoms are done
+ * being created.
+ */
 
 int atoms_done() {
   return g_oxy_done && g_nitr_done;
-}
+} /* atoms_done()  */
+
+/* This function is used to determine when all the basic molecules are
+ * done being created.
+ */
 
 int basic_molecules_done() {
   return g_o2_done && g_n2_done;
-}
+} /* basic_molecules_done()  */
 
 /*
  * Create oxygen atoms. The number of atoms to create is specified by the
@@ -184,10 +182,10 @@ void *create_no2(void *ptr) {
   while(!basic_molecules_done());
 
   while (1) {
-    // Add your code to consume one N2 molecule and two O2 molecules and
-    // produce two NO2 molecules
 
     sem_wait(&g_sig_basic);
+
+    /* Ensure that there are enough molecules to make no2 */
 
     int exit = (g_num_n2 < 1) || (g_num_o2 < 2);
 
@@ -203,6 +201,8 @@ void *create_no2(void *ptr) {
     }
 
     sem_post(&g_sig_basic);
+
+    /* Exit when there are no more molecules to use */
 
     if (exit) {
       break;
@@ -224,9 +224,10 @@ void *create_o3(void *ptr) {
   while(!basic_molecules_done());
 
   while (1) {
-    // Add your code to consume three O2 molecules and produce two O3 molecules
 
     sem_wait(&g_sig_basic);
+
+    /* Ensure that there are enough o2 molecules to make o3 */
 
     int exit = g_num_o2 < 3;
 
@@ -236,10 +237,11 @@ void *create_o3(void *ptr) {
 
       printf("Three molecules of O2 combined to produce "
              "two molecules of O3.\n");
-
     }
 
     sem_post(&g_sig_basic);
+
+    /* Exit when there are no more o3 molecules to be used */
 
     if (exit) {
       break;
