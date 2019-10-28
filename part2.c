@@ -102,7 +102,7 @@ void *create_nitrogen(void *ptr) {
  */
 
 void *create_n2(void *ptr) {
-  UNUSED(ptr);
+  //UNUSED(ptr);
 
   while (1) {
     /* Waits until 2 nitrogen atoms are created */
@@ -131,7 +131,7 @@ void *create_n2(void *ptr) {
  */
 
 void *create_o2(void *ptr) {
-  UNUSED(ptr);
+  //UNUSED(ptr);
 
   while (1) {
     // Add your code to consume two O atoms and produce one O2 molecule
@@ -162,7 +162,7 @@ void *create_o2(void *ptr) {
  */
 
 void *create_no2(void *ptr) {
-  UNUSED(ptr);
+  //UNUSED(ptr);
 
   while (1) {
     // Add your code to consume one N2 molecule and two O2 molecules and
@@ -194,7 +194,7 @@ void *create_no2(void *ptr) {
  */
 
 void *create_o3(void *ptr) {
-  UNUSED(ptr);
+  //UNUSED(ptr);
 
   while (1) {
     // Add your code to consume three O2 molecules and produce two O3 molecules
