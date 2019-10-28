@@ -189,7 +189,7 @@ void *create_no2(void *ptr) {
 
     /* Wait for one n2 molecule and two o2 molecules */
 
-    sem_wait(&s_sig_no2);
+    sem_wait(&g_sig_no2);
 
     sem_wait(&g_sig_basic);
 
