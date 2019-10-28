@@ -45,7 +45,7 @@ int atoms_done() {
   return g_oxy_done && g_nitr_done;
 }
 
-int basic_moles_done() {
+int basic_molecules_done() {
   return g_o2_done && g_n2_done;
 }
 
@@ -147,34 +147,19 @@ void *create_o2(void *ptr) {
   while(!atoms_done());
 
   while (1) {
-    // Add your code to consume two O atoms and produce one O2 molecule
-
-
-    /* Wait until there are enough O atoms to make an o2 molecule */
-
-    sem_wait(&g_sig_o2);
 
     sem_wait(&g_sig_basic);
 
-    g_num_oxygen -= 2;
-    g_num_o2++;
-
-    printf("Two atoms of oxygen combined to produce one molecule of O2.\n");
-
-/*
-    // If there are enough o2 molecules to make o3, signal o3
-
-    if (g_num_o2 >= 3) {
-      sem_post(&g_sig_o3);
-    }
-
-    if ((g_num_o2 >= 2) && (g_num_n2 >= 1)) {
-      sem_post(&g_sig_no2);
-    }
-*/
+    /* Ensure that there are enough oxygen atoms to make o2 */
 
     int exit = g_num_oxygen < 2;
-//    printf("Num oxy: %d\n", g_num_oxygen);
+    if (!exit) {
+
+      g_num_oxygen -= 2;
+      g_num_o2++;
+
+      printf("Two atoms of oxygen combined to produce one molecule of O2.\n");
+    }
 
     sem_post(&g_sig_basic);
 
@@ -183,7 +168,7 @@ void *create_o2(void *ptr) {
     }
   }
 
-//  printf("exit create_o2\n");
+  g_o2_done = 1;
   pthread_exit(0);
 } /* create_o2() */
 
@@ -193,6 +178,10 @@ void *create_o2(void *ptr) {
 
 void *create_no2(void *ptr) {
   UNUSED(ptr);
+
+  /* Wait for the basic molecules to be done */
+
+  while(!basic_molecules_done());
 
   while (1) {
     // Add your code to consume one N2 molecule and two O2 molecules and
@@ -229,6 +218,10 @@ void *create_no2(void *ptr) {
 
 void *create_o3(void *ptr) {
   UNUSED(ptr);
+
+  /* Wait for the basic molecules to be done */
+
+  while(!basic_molecules_done());
 
   while (1) {
     // Add your code to consume three O2 molecules and produce two O3 molecules
