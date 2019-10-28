@@ -157,21 +157,35 @@ void *consumer(void *ptr) {
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
-    char c = BLOCK;
+   // char c = BLOCK;
 
     /* Wait until there are characters to be consumed */
 
     sem_wait(&g_empty_sem);
 
-    c = dequeue(i);
+    int value = BLOCK;
 
-    if (c != BLOCK) {
+    pthread_mutex_lock(&g_buffer_mutex);
+
+    if (index > g_indices_consumed) {
+      value = g_buffer.buf[g_buffer.head];
+      g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
+      g_indices_consumed++;
+    }
+//  else {
+//    printf("buf[%d] is already consumed\n", index);
+//  }
+
+    pthread_mutex_unlock(&g_buffer_mutex);
+    //c = dequeue(i);
+
+    if (value != BLOCK) {
 
       /* Let everything know that there is another space available in
        * the buffer to be used */
 
       sem_post(&g_full_sem);
-      printf("Thread %d consumed %c\n", thread_id, c);
+      printf("Thread %d consumed %c\n", thread_id, value);
     }
   }
 
