@@ -183,6 +183,8 @@ int main(int argc, char **argv) {
         (void *) id);
   }
 
+  num_thrds = 0;
+
   /* Create all of the consumers */
 
   int num_consumers = atoi(argv[2]);
