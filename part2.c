@@ -57,15 +57,13 @@ void *create_oxygen(void *ptr) {
   free(ptr);
   ptr = NULL;
 
-
-  sem_wait(&g_sig_basic);
-
-  g_num_oxygen += how_many;
   for (int i = 1; i <= how_many; i++) {
+    sem_wait(&g_sig_basic);
+    g_num_oxygen++;
     printf("An atom of oxygen was created.\n");
+    sem_post(&g_sig_basic);
   }
 
-  sem_post(&g_sig_basic);
 
   g_oxy_done = 1;
   pthread_exit(0);
