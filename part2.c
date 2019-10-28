@@ -282,10 +282,6 @@ int main(int argc, char **argv) {
   sem_init(&g_sig_basic, 0, 1);
   sem_init(&g_sig_n2, 0, 0);
   sem_init(&g_sig_o2, 0, 0);
-  sem_init(&g_sig_o2_moles, 0, 0);
-  sem_init(&g_sig_n2_moles, 0, 0);
-  sem_init(&g_sig_o3, 0, 0);
-  sem_init(&g_sig_no2, 0, 0);
 
   // Add your code to create the threads.  Remember to allocate and pass the
   // arguments for create_oxygen and create_nitrogen.
