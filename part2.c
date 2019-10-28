@@ -27,6 +27,11 @@ sem_t g_sig_o2 = {0};
 sem_t g_sig_n2 = {0};
 
 
+int g_oxy_done = 0;
+int g_nitr_done = 0;
+int g_o2_done = 0;
+int g_n2_done = 0;
+
 /* These mutexes should be held when accessing the number of
  * atoms/ molecules */
 
@@ -34,6 +39,15 @@ pthread_mutex_t g_oxygen_mutex = {0};
 pthread_mutex_t g_nitrogen_mutex = {0};
 pthread_mutex_t g_o2_mutex = {0};
 pthread_mutex_t g_n2_mutex = {0};
+
+
+int atoms_done() {
+  return g_oxy_done && g_nitr_done;
+}
+
+int basic_moles_done() {
+  return g_o2_done && g_n2_done;
+}
 
 /*
  * Create oxygen atoms. The number of atoms to create is specified by the
@@ -51,17 +65,11 @@ void *create_oxygen(void *ptr) {
   g_num_oxygen += how_many;
   for (int i = 1; i <= how_many; i++) {
     printf("An atom of oxygen was created.\n");
-
-    /* Let everything know that there are enough O atoms to
-     * make an o2 molecule */
-
-    if (i % 2 == 0) {
-      sem_post(&g_sig_o2);
-    }
   }
 
   sem_post(&g_sig_basic);
 
+  g_oxy_done = 1;
   pthread_exit(0);
 } /* create_oxygen() */
 
@@ -80,16 +88,11 @@ void *create_nitrogen(void *ptr) {
   g_num_nitrogen += how_many;
   for (int i = 1; i <= how_many; i++) {
     printf("An atom of nitrogen was created.\n");
-
-    /* Let everything know that 2 Nitrogen molecules were made */
-
-    if (i % 2 == 0) {
-      sem_post(&g_sig_n2);
-    }
   }
 
   sem_post(&g_sig_basic);
 
+  g_nitr_done = 1;
   pthread_exit(0);
 } /* create_nitrogen() */
 
@@ -100,34 +103,26 @@ void *create_nitrogen(void *ptr) {
 void *create_n2(void *ptr) {
   UNUSED(ptr);
 
+  /* Wait for the atoms to be created */
+
+  while(!atoms_done());
+
   while (1) {
-
-    /* Waits until a nitrogen molecule can be executed */
-
-    sem_wait(&g_sig_n2);
 
     sem_wait(&g_sig_basic);
 
-    /* Create a n2 molecule */
-
-    g_num_nitrogen -= 2;
-    g_num_n2++;
-
-    printf("Two atoms of nitrogen combined to produce one molecule of N2.\n");
-
-/*
-    // If the criteria for a no2 molecule exist, signal no2
-
-    if ( (g_num_n2 >= 1) && (g_num_o2 >= 2)) {
-      sem_post(&g_sig_no2);
-    }
-
-*/
-
-    /* Ensure that there are enough nitrogen atoms to continue execution */
+    /* Ensure that there are enough nitrogen atoms to create n2 */
 
     int exit = g_num_nitrogen < 2;
-//    printf("Num nitr: %d\n", g_num_nitrogen);
+    if (!exit) {
+
+      /* Create a n2 molecule */
+
+      g_num_nitrogen -= 2;
+      g_num_n2++;
+
+      printf("Two atoms of nitrogen combined to produce one molecule of N2.\n");
+    }
 
     sem_post(&g_sig_basic);
 
@@ -136,7 +131,7 @@ void *create_n2(void *ptr) {
     }
   }
 
-//  printf("exit create_n2\n");
+  g_n2_done = 1;
   pthread_exit(0);
 } /* create_n2() */
 
@@ -146,6 +141,10 @@ void *create_n2(void *ptr) {
 
 void *create_o2(void *ptr) {
   UNUSED(ptr);
+
+  /* Wait for all the atoms to be created */
+
+  while(!atoms_done());
 
   while (1) {
     // Add your code to consume two O atoms and produce one O2 molecule

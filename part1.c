@@ -192,6 +192,8 @@ int main(int argc, char **argv) {
         (void *) prod_id);
     pthread_create(&consumers[i], NULL, (void * (*)(void *)) consumer,
         (void *) cons_id);
+    pthread_join(producers[i], NULL);
+    pthread_join(consumers[i], NULL);
   }
 
 /*
@@ -217,10 +219,8 @@ int main(int argc, char **argv) {
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
 
-  for (int i = 0; i < num_producers; i++) {
-    pthread_join(producers[i], NULL);
-    pthread_join(consumers[i], NULL);
-  }
+//  for (int i = 0; i < num_producers; i++) {
+//  }
 /*
   for (int i = 0; i < num_consumers; i++) {
     pthread_join(consumers[i], NULL);
