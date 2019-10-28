@@ -25,13 +25,7 @@ int g_num_n2 = 0;
 sem_t g_sig_basic = {0};
 sem_t g_sig_o2 = {0};
 sem_t g_sig_n2 = {0};
-sem_t g_sig_no2 = {0};
-sem_t g_sig_o3 = {0};
 
-/* These semaphores keep track of how many molecules of o2 and n2 */
-
-sem_t g_sig_n2_moles = {0};
-sem_t g_sig_o2_moles = {0};
 
 /* These mutexes should be held when accessing the number of
  * atoms/ molecules */
@@ -121,11 +115,14 @@ void *create_n2(void *ptr) {
 
     printf("Two atoms of nitrogen combined to produce one molecule of N2.\n");
 
-    /* If the criteria for a no2 molecule exist, signal no2 */
+/*
+    // If the criteria for a no2 molecule exist, signal no2
 
     if ( (g_num_n2 >= 1) && (g_num_o2 >= 2)) {
       sem_post(&g_sig_no2);
     }
+
+*/
 
     /* Ensure that there are enough nitrogen atoms to continue execution */
 
@@ -165,7 +162,8 @@ void *create_o2(void *ptr) {
 
     printf("Two atoms of oxygen combined to produce one molecule of O2.\n");
 
-    /* If there are enough o2 molecules to make o3, signal o3 */
+/*
+    // If there are enough o2 molecules to make o3, signal o3
 
     if (g_num_o2 >= 3) {
       sem_post(&g_sig_o3);
@@ -174,6 +172,7 @@ void *create_o2(void *ptr) {
     if ((g_num_o2 >= 2) && (g_num_n2 >= 1)) {
       sem_post(&g_sig_no2);
     }
+*/
 
     int exit = g_num_oxygen < 2;
 //    printf("Num oxy: %d\n", g_num_oxygen);
@@ -200,21 +199,20 @@ void *create_no2(void *ptr) {
     // Add your code to consume one N2 molecule and two O2 molecules and
     // produce two NO2 molecules
 
-    /* Wait for one n2 molecule and two o2 molecules */
-
-    sem_wait(&g_sig_no2);
-
     sem_wait(&g_sig_basic);
 
-    /* Create a no2 molecule */
-
-    g_num_o2 -= 2;
-    g_num_n2--;
-
-    printf("One molecule of N2 and two molecules of O2 combined to "
-           "produce two molecules of NO2.\n");
-
     int exit = (g_num_n2 < 1) || (g_num_o2 < 2);
+
+    if (!exit) {
+
+      /* Create a no2 molecule */
+
+      g_num_o2 -= 2;
+      g_num_n2--;
+
+      printf("One molecule of N2 and two molecules of O2 combined to "
+             "produce two molecules of NO2.\n");
+    }
 
     sem_post(&g_sig_basic);
 
@@ -236,19 +234,18 @@ void *create_o3(void *ptr) {
   while (1) {
     // Add your code to consume three O2 molecules and produce two O3 molecules
 
-
-    /* Wait for three o2 molecules to form */
-
-    sem_wait(&g_sig_o3);
-
     sem_wait(&g_sig_basic);
 
-    g_num_o2 -= 3;
-
-    printf("Three molecules of O2 combined to produce "
-        "two molecules of O3.\n");
-
     int exit = g_num_o2 < 3;
+
+    if (!exit) {
+
+      g_num_o2 -= 3;
+
+      printf("Three molecules of O2 combined to produce "
+             "two molecules of O3.\n");
+
+    }
 
     sem_post(&g_sig_basic);
 
