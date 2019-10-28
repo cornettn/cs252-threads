@@ -182,14 +182,16 @@ int main(int argc, char **argv) {
   for (int i = 0; i < num_producers; i++) {
     pthread_t prod_thrd = 0;
     pthread_t cons_thrd = 0;
-    int *id = (int *) malloc(sizeof(int));
-    *id = num_thrds++;
+    int *prod_id = (int *) malloc(sizeof(int));
+    int *cons_id = (int *) malloc(sizeof(int));
+    *prod_id = num_thrds++;
+    *cons_id = *prod_id;
     producers[i] = prod_thrd;
     consumers[i] = cons_thrd;
     pthread_create(&producers[i], NULL, (void * (*)(void *)) producer,
-        (void *) id);
+        (void *) prod_id);
     pthread_create(&consumers[i], NULL, (void * (*)(void *)) consumer,
-        (void *) id);
+        (void *) cons_id);
   }
 
 /*
@@ -217,11 +219,13 @@ int main(int argc, char **argv) {
 
   for (int i = 0; i < num_producers; i++) {
     pthread_join(producers[i], NULL);
+    pthread_join(consumers[i], NULL);
   }
-
+/*
   for (int i = 0; i < num_consumers; i++) {
     pthread_join(consumers[i], NULL);
   }
+*/
 
 //  printf("Joined\n");
 
