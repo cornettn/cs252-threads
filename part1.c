@@ -58,7 +58,7 @@ int enqueue(int index) {
   return value;
 }
 
-int dequeue(int index) {
+int dequeue() {
 
   /* Wait until there are characters to be consumed */
 
@@ -99,7 +99,7 @@ void *producer(void *ptr) {
 
     /* Insert into the queue */
 
-    int value = enqueue(g_prod_str[i]);
+    int value = enqueue(i);
 
     printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
   }
