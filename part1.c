@@ -98,7 +98,7 @@ void *producer(void *ptr) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then add g_prod_str[i] to the g_buffer.
 
-    int val = BLOCK;
+   // int value = BLOCK;
 
     /* Wait until there is space in the buffer to place another character */
 
@@ -106,9 +106,26 @@ void *producer(void *ptr) {
 
     /* Insert into the queue */
 
-    val = enqueue(i);
+    int value = SUCCESS;
 
-    if (val != BLOCK) {
+    pthread_mutex_lock(&g_buffer_mutex);
+
+  /* Ensure that we are not queueing the same character twice */
+
+    if (index <= g_indices_produced) {
+//    printf("buf[%d] is blocked\n", index);
+      value = BLOCK;
+    }
+    else {
+      g_buffer.buf[g_buffer.tail] = g_prod_str[index];
+      g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
+      g_indices_produced++;
+    }
+
+    pthread_mutex_unlock(&g_buffer_mutex);
+//    val = enqueue(i);
+
+    if (value != BLOCK) {
       /* Let everyting know that there is another character in the buffer
        * that is ready to be consumed */
 
