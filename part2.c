@@ -79,14 +79,14 @@ void *create_nitrogen(void *ptr) {
   free(ptr);
   ptr = NULL;
 
-  sem_wait(&g_sig_basic);
 
-  g_num_nitrogen += how_many;
   for (int i = 1; i <= how_many; i++) {
+    sem_wait(&g_sig_basic);
+    g_num_nitrogen++;
     printf("An atom of nitrogen was created.\n");
+    sem_post(&g_sig_basic);
   }
 
-  sem_post(&g_sig_basic);
 
   g_nitr_done = 1;
   pthread_exit(0);
