@@ -103,7 +103,8 @@ void *create_n2(void *ptr) {
 
   /* Wait for the atoms to be created */
 
-  while(!(atoms_done())) {}
+  while (!atoms_done()) {
+  }
 
   while (1) {
 
