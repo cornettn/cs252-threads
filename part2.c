@@ -256,36 +256,36 @@ int main(int argc, char **argv) {
   pthread_t oxygen_atoms_thrd = 0;
   int *atoms = (int *) malloc(sizeof(int));
   *atoms = num_oxygen;
-  pthread_create(&oxygen_atoms_thrd, NULL, (void *) create_oxygen,
+  pthread_create(&oxygen_atoms_thrd, NULL, (void * (*)(void *)) create_oxygen,
       (void *) atoms);
 
   /* Create thread for nitrogen atoms */
 
   pthread_t nitrogen_atoms_thrd = 0;
   atoms = (int *) malloc(sizeof(int));
-  *atoms = num_oxygen;
-  pthread_create(&nitrogen_atoms_thrd, NULL, (void *) create_nitrogen,
+  *atoms = num_nitrogen;
+  pthread_create(&nitrogen_atoms_thrd, NULL, (void * (*)(void *)) create_nitrogen,
       (void *) atoms);
 
   /* Create thread for n2 molecules */
 
   pthread_t n2_moles_thrd = 0;
-  pthread_create(&n2_moles_thrd, NULL, (void *) create_n2, NULL);
+  pthread_create(&n2_moles_thrd, NULL, (void * (*)(void *)) create_n2, NULL);
 
   /* Create thread for o2 molecules */
 
   pthread_t o2_moles_thrd = 0;
-  pthread_create(&o2_moles_thrd, NULL, (void *) create_o2, NULL);
+  pthread_create(&o2_moles_thrd, NULL, (void * (*)(void *)) create_o2, NULL);
 
   /* Create thread for no2 molecules */
 
   pthread_t no2_moles_thrd = 0;
-  pthread_create(&no2_moles_thrd, NULL, (void *) create_no2, NULL);
+  pthread_create(&no2_moles_thrd, NULL, (void * (*)(void *)) create_no2, NULL);
 
   /* Create thread for o3 molecules */
 
   pthread_t o3_moles_thrd = 0;
-  pthread_create(&o3_moles_thrd, NULL, (void *) create_o3, NULL);
+  pthread_create(&o3_moles_thrd, NULL, (void * (*)(void *)) create_o3, NULL);
 
   // Add your code to wait till threads are complete before main
   // continues. Unless we wait we run the risk of executing an exit which will
