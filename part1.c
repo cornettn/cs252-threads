@@ -112,12 +112,12 @@ void *producer(void *ptr) {
 
   /* Ensure that we are not queueing the same character twice */
 
-    if (index <= g_indices_produced) {
+    if ((int) i <= g_indices_produced) {
 //    printf("buf[%d] is blocked\n", index);
       value = BLOCK;
     }
     else {
-      g_buffer.buf[g_buffer.tail] = g_prod_str[index];
+      g_buffer.buf[g_buffer.tail] = g_prod_str[i];
       g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
       g_indices_produced++;
     }
