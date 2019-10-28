@@ -143,7 +143,8 @@ void *create_o2(void *ptr) {
 
   /* Wait for all the atoms to be created */
 
-  while(!atoms_done()) {}
+  while (!atoms_done()) {
+  }
 
   while (1) {
 
@@ -180,7 +181,8 @@ void *create_no2(void *ptr) {
 
   /* Wait for the basic molecules to be done */
 
-  while(!basic_molecules_done()) {}
+  while (!basic_molecules_done()) {
+  }
 
   while (1) {
 
@@ -222,7 +224,8 @@ void *create_o3(void *ptr) {
 
   /* Wait for the basic molecules to be done */
 
-  while(!basic_molecules_done()) {}
+  while (!basic_molecules_done()) {
+  }
 
   while (1) {
 
