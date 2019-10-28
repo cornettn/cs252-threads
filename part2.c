@@ -103,11 +103,18 @@ void *create_n2(void *ptr) {
   UNUSED(ptr);
 
   while (1) {
+
+    sem_wait(&g_sig_basic);
+
+    if (g_num_nitrogen < 2) {
+      sem_post(&g_sig_basic);
+      break;
+    }
+
     /* Waits until 2 nitrogen atoms are created */
 
     sem_wait(&g_sig_n2);
     sem_wait(&g_sig_n2);
-    sem_wait(&g_sig_basic);
 
     /* Create a n2 molecule */
 
@@ -116,17 +123,12 @@ void *create_n2(void *ptr) {
 
     printf("Two atoms of nitrogen combined to produce one molecule of N2.\n");
 
-    bool exit = g_num_nitrogen == 0;
-
     sem_post(&g_sig_basic);
 
     /* Let everything know that a n2 molecule was made */
 
     sem_post(&g_sig_n2_moles);
 
-    if (exit) {
-      break;
-    }
   }
 
   pthread_exit(0);
