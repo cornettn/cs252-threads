@@ -22,7 +22,7 @@ fi
 if [[ $* == -v ]]; then
     diff <(echo $consumed) <(echo $produced)
 else
-    diff <(echo $consumed) <(echo $produced) >/dev/null    
+    diff <(echo $consumed) <(echo $produced) >/dev/null
 fi
 
 if [ $? -eq 0 ]; then
@@ -31,7 +31,7 @@ else
     echo -e "Consumption order is not the same as production order."
     echo -e "To see the difference when the test fails, use argument -v"
     echo -e "\e[31mtest_part1_order failed.\e[0m"
-fi	
+fi
 
 rm -rf out.txt
 
