@@ -132,6 +132,10 @@ void *create_n2(void *ptr) {
     int exit = g_num_nitrogen < 2;
 
     sem_post(&g_sig_basic);
+
+    if (exit) {
+      break;
+    }
   }
 
   pthread_exit(0);
