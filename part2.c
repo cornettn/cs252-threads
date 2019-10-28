@@ -88,7 +88,9 @@ void *create_nitrogen(void *ptr) {
   }
 
 
+  sem_wait(&g_sig_basic);
   g_nitr_done = 1;
+  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_nitrogen() */
 
@@ -126,7 +128,9 @@ void *create_n2(void *ptr) {
     }
   }
 
+  sem_wait(&g_sig_basic);
   g_n2_done = 1;
+  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_n2() */
 
@@ -162,7 +166,9 @@ void *create_o2(void *ptr) {
     }
   }
 
+  sem_wait(&g_sig_basic);
   g_o2_done = 1;
+  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_o2() */
 
