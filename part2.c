@@ -37,7 +37,7 @@ int g_n2_done = 0;
 
 int atoms_done() {
   return g_oxy_done && g_nitr_done;
-} /* atoms_done()  */
+} /* atoms_done() */
 
 /* This function is used to determine when all the basic molecules are
  * done being created.
@@ -45,7 +45,7 @@ int atoms_done() {
 
 int basic_molecules_done() {
   return g_o2_done && g_n2_done;
-} /* basic_molecules_done()  */
+} /* basic_molecules_done() */
 
 /*
  * Create oxygen atoms. The number of atoms to create is specified by the
@@ -103,7 +103,9 @@ void *create_n2(void *ptr) {
 
   /* Wait for the atoms to be created */
 
-  while(!atoms_done());
+  while(!(atoms_done())) {
+    ;
+  }
 
   while (1) {
 
@@ -142,7 +144,7 @@ void *create_o2(void *ptr) {
 
   /* Wait for all the atoms to be created */
 
-  while(!atoms_done());
+  while(!atoms_done()) {}
 
   while (1) {
 
@@ -179,7 +181,7 @@ void *create_no2(void *ptr) {
 
   /* Wait for the basic molecules to be done */
 
-  while(!basic_molecules_done());
+  while(!basic_molecules_done()) {}
 
   while (1) {
 
@@ -221,7 +223,7 @@ void *create_o3(void *ptr) {
 
   /* Wait for the basic molecules to be done */
 
-  while(!basic_molecules_done());
+  while(!basic_molecules_done()) {}
 
   while (1) {
 
@@ -286,7 +288,8 @@ int main(int argc, char **argv) {
   pthread_t oxygen_atoms_thrd = 0;
   int *atoms = (int *) malloc(sizeof(int));
   *atoms = num_oxygen;
-  pthread_create(&oxygen_atoms_thrd, NULL, (void * (*)(void *)) create_oxygen,
+  pthread_create(&oxygen_atoms_thrd, NULL,
+      (void * (*)(void *)) create_oxygen,
       (void *) atoms);
 
   /* Create thread for nitrogen atoms */
@@ -294,8 +297,8 @@ int main(int argc, char **argv) {
   pthread_t nitrogen_atoms_thrd = 0;
   atoms = (int *) malloc(sizeof(int));
   *atoms = num_nitrogen;
-  pthread_create(&nitrogen_atoms_thrd, NULL, (void * (*)(void *)) create_nitrogen,
-      (void *) atoms);
+  pthread_create(&nitrogen_atoms_thrd, NULL,
+      (void * (*)(void *)) create_nitrogen, (void *) atoms);
 
   /* Create thread for n2 molecules */
 
