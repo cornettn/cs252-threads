@@ -11,7 +11,7 @@
 
 // The producers add the characters in g_prod_str to the g_buffer, in order.
 
-char *g_prod_str = "The greatest teacher. failure is.";
+char *g_prod_str = "The greatest teacher, failure is.";
 
 bounded_buffer g_buffer = {0};
 
