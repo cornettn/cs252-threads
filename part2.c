@@ -101,11 +101,6 @@ void *create_nitrogen(void *ptr) {
 void *create_n2(void *ptr) {
   UNUSED(ptr);
 
-  /* Wait for the atoms to be created */
-
-  while (!atoms_done()) {
-  }
-
   while (1) {
 
     sem_wait(&g_sig_basic);
@@ -125,7 +120,10 @@ void *create_n2(void *ptr) {
 
     sem_post(&g_sig_basic);
 
-    if (exit) {
+    /* Break the loop if all atoms have been created and there are no more
+     * molecules to make. */
+
+    if ((exit) && (atoms_done())) {
       break;
     }
   }
@@ -140,11 +138,6 @@ void *create_n2(void *ptr) {
 
 void *create_o2(void *ptr) {
   UNUSED(ptr);
-
-  /* Wait for all the atoms to be created */
-
-  while (!atoms_done()) {
-  }
 
   while (1) {
 
@@ -163,7 +156,10 @@ void *create_o2(void *ptr) {
 
     sem_post(&g_sig_basic);
 
-    if (exit) {
+    /* Break if there are no more oxygen atoms to use and all atoms have been
+     * created */
+
+    if ((exit) && (atoms_done())) {
       break;
     }
   }
@@ -178,11 +174,6 @@ void *create_o2(void *ptr) {
 
 void *create_no2(void *ptr) {
   UNUSED(ptr);
-
-  /* Wait for the basic molecules to be done */
-
-  while (!basic_molecules_done()) {
-  }
 
   while (1) {
 
@@ -207,7 +198,7 @@ void *create_no2(void *ptr) {
 
     /* Exit when there are no more molecules to use */
 
-    if (exit) {
+    if ((exit) && (basic_molecules_done())) {
       break;
     }
   }
@@ -221,11 +212,6 @@ void *create_no2(void *ptr) {
 
 void *create_o3(void *ptr) {
   UNUSED(ptr);
-
-  /* Wait for the basic molecules to be done */
-
-  while (!basic_molecules_done()) {
-  }
 
   while (1) {
 
@@ -247,7 +233,7 @@ void *create_o3(void *ptr) {
 
     /* Exit when there are no more o3 molecules to be used */
 
-    if (exit) {
+    if ((exit) && (basic_molecules_done())) {
       break;
     }
   }
