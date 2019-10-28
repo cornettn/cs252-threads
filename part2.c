@@ -139,6 +139,7 @@ void *create_n2(void *ptr) {
     }
   }
 
+  printf("exit create_n2\n");
   pthread_exit(0);
 } /* create_n2() */
 
@@ -184,6 +185,7 @@ void *create_o2(void *ptr) {
     }
   }
 
+  printf("exit create_o2\n");
   pthread_exit(0);
 } /* create_o2() */
 
