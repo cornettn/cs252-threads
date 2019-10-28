@@ -130,7 +130,7 @@ void *create_n2(void *ptr) {
     /* Ensure that there are enough nitrogen atoms to continue execution */
 
     int exit = g_num_nitrogen < 2;
-    printf("Num nitr: %d\n", g_num_nitrogen);
+//    printf("Num nitr: %d\n", g_num_nitrogen);
 
     sem_post(&g_sig_basic);
 
@@ -139,7 +139,7 @@ void *create_n2(void *ptr) {
     }
   }
 
-  printf("exit create_n2\n");
+//  printf("exit create_n2\n");
   pthread_exit(0);
 } /* create_n2() */
 
@@ -176,7 +176,7 @@ void *create_o2(void *ptr) {
     }
 
     int exit = g_num_oxygen < 2;
-    printf("Num oxy: %d\n", g_num_oxygen);
+//    printf("Num oxy: %d\n", g_num_oxygen);
 
     sem_post(&g_sig_basic);
 
@@ -185,7 +185,7 @@ void *create_o2(void *ptr) {
     }
   }
 
-  printf("exit create_o2\n");
+//  printf("exit create_o2\n");
   pthread_exit(0);
 } /* create_o2() */
 
