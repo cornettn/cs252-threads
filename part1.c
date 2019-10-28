@@ -65,7 +65,7 @@ int dequeue() {
   sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-  value = g_buffer.buf[g_buffer.head];
+  int value = g_buffer.buf[g_buffer.head];
   g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
 
   pthread_mutex_unlock(&g_buffer_mutex);
@@ -99,7 +99,7 @@ void *producer(void *ptr) {
 
     /* Insert into the queue */
 
-    int value = enqueue(i);
+    enqueue(i);
 
     printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
   }
