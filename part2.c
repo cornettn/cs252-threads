@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define UNUSED(x) void(x)
+#define UNUSED(x) (void)(x)
 
 // The number of molecules of each type
 // (O, N, O2, and N2)
@@ -102,7 +102,7 @@ void *create_nitrogen(void *ptr) {
  */
 
 void *create_n2(void *ptr) {
-  //UNUSED(ptr);
+  UNUSED(ptr);
 
   while (1) {
     /* Waits until 2 nitrogen atoms are created */
@@ -179,7 +179,7 @@ void *create_no2(void *ptr) {
 
     g_num_o2 -= 2;
     g_num_n2--;
-    g_num_no2 += 2;
+//    g_num_no2 += 2;
 
     printf("One molecule of N2 and two molecules of O2 combined to "
            "produce two molecules of NO2.\n");
@@ -207,7 +207,7 @@ void *create_o3(void *ptr) {
     sem_wait(&g_sig_basic);
 
     g_num_o2 -= 3;
-    g_num_o3 += 2;
+//    g_num_o3 += 2;
 
     printf("Three molecules of O2 combined to produce "
         "two molecules of O3.\n");
