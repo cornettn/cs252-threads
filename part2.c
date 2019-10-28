@@ -92,8 +92,6 @@ void *create_nitrogen(void *ptr) {
 
   sem_post(&g_sig_basic);
 
-
-
   pthread_exit(0);
 } /* create_nitrogen() */
 
@@ -118,12 +116,20 @@ void *create_n2(void *ptr) {
 
     printf("Two atoms of nitrogen combined to produce one molecule of N2.\n");
 
+    bool exit = g_num_nitrogen == 0;
+
     sem_post(&g_sig_basic);
 
     /* Let everything know that a n2 molecule was made */
 
     sem_post(&g_sig_n2_moles);
+
+    if (exit) {
+      break;
+    }
   }
+
+  pthread_exit(0);
 } /* create_n2() */
 
 /*
@@ -136,12 +142,18 @@ void *create_o2(void *ptr) {
   while (1) {
     // Add your code to consume two O atoms and produce one O2 molecule
 
+    sem_wait(&g_sig_basic);
+
+    if (g_num_oxygen < 2) {
+      sem_post(&g_sig_basic);
+      break;
+    }
+
     /* Wait until 2 Oxygen atoms are created */
 
     sem_wait(&g_sig_o2);
     sem_wait(&g_sig_o2);
 
-    sem_wait(&g_sig_basic);
 
     g_num_oxygen -= 2;
     g_num_o2++;
@@ -153,8 +165,9 @@ void *create_o2(void *ptr) {
     /* Let everything know that a o2 molecule was made */
 
     sem_post(&g_sig_o2_moles);
-
   }
+
+  pthread_exit(0);
 } /* create_o2() */
 
 /*
@@ -168,12 +181,21 @@ void *create_no2(void *ptr) {
     // Add your code to consume one N2 molecule and two O2 molecules and
     // produce two NO2 molecules
 
+    sem_wait(&g_sig_basic);
+
+    /* Ensure that there are enough molecules for creation */
+
+    if ((g_num_o2 < 2) || (g_num_n2 < 1)) {
+      sem_post(&g_sig_basic);
+      break;
+    }
+
     /* Wait for one n2 molecule and two o2 molecules */
+
     sem_wait(&g_sig_n2_moles);
     sem_wait(&g_sig_o2_moles);
     sem_wait(&g_sig_o2_moles);
 
-    sem_wait(&g_sig_basic);
 
     /* Create a no2 molecule */
 
@@ -185,8 +207,9 @@ void *create_no2(void *ptr) {
            "produce two molecules of NO2.\n");
 
     sem_post(&g_sig_basic);
-
   }
+
+  pthread_exit(0);
 } /* create_no2() */
 
 /*
@@ -199,12 +222,17 @@ void *create_o3(void *ptr) {
   while (1) {
     // Add your code to consume three O2 molecules and produce two O3 molecules
 
+    sem_wait(&g_sig_basic);
+
+    if (g_num_o2 < 3) {
+      sem_post(&g_sig_basic);
+      break;
+    }
+
     /* Wait for three o2 molecules to form */
     sem_wait(&g_sig_o2_moles);
     sem_wait(&g_sig_o2_moles);
     sem_wait(&g_sig_o2_moles);
-
-    sem_wait(&g_sig_basic);
 
     g_num_o2 -= 3;
 //    g_num_o3 += 2;
@@ -213,8 +241,9 @@ void *create_o3(void *ptr) {
         "two molecules of O3.\n");
 
     sem_post(&g_sig_basic);
-
   }
+
+  pthread_exit(0);
 } /* create_o3() */
 
 
