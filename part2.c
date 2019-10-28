@@ -130,6 +130,7 @@ void *create_n2(void *ptr) {
     /* Ensure that there are enough nitrogen atoms to continue execution */
 
     int exit = g_num_nitrogen < 2;
+    //printf("Num nitr: %d\n", g_num_nitrogen);
 
     sem_post(&g_sig_basic);
 
@@ -173,7 +174,13 @@ void *create_o2(void *ptr) {
       sem_post(&g_sig_no2);
     }
 
+    int exit = g_num_oxygen < 2;
+
     sem_post(&g_sig_basic);
+
+    if (exit) {
+      break;
+    }
   }
 
   pthread_exit(0);
