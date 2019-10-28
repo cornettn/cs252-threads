@@ -15,15 +15,9 @@ char *g_prod_str = "The greatest teacher, failure is.";
 
 bounded_buffer g_buffer = {0};
 
-// This is the number of characters in the buffer at any given time
-
-//int g_indices_produced = -1;
-//int g_indices_consumed = -1;
-
 // This mutex must be held whenever you use the g_buffer.
 
 pthread_mutex_t g_buffer_mutex = {0};
-
 
 // g_empty_sem is the number of characters in the g_buffer,
 // that need to be emptied.
@@ -37,6 +31,10 @@ sem_t g_empty_sem = {0};
 
 sem_t g_full_sem = {0};
 
+
+/*
+ * This function is used to queue a new character to the buffer.
+ */
 
 int enqueue(int index) {
   int value = SUCCESS;
@@ -56,7 +54,12 @@ int enqueue(int index) {
   sem_post(&g_empty_sem);
 
   return value;
-}
+} /* enqueue() */
+
+
+/*
+ * This function is used to dequeue a character from the buffer.
+ */
 
 int dequeue() {
 
@@ -75,9 +78,8 @@ int dequeue() {
 
   sem_post(&g_full_sem);
 
-
   return value;
-}
+} /* dequeue() */
 
 /*
  * Produce the characters (that is, add them to the g_buffer) from g_prod_str,
@@ -94,8 +96,6 @@ void *producer(void *ptr) {
   fflush(NULL);
 
   for (size_t i = 0; i < strlen(g_prod_str); i++) {
-    // Add your code to wait on the semaphore and obtain the lock,
-    // then add g_prod_str[i] to the g_buffer.
 
     /* Insert into the queue */
 
@@ -123,9 +123,6 @@ void *consumer(void *ptr) {
   fflush(NULL);
 
   for (size_t i = 0; i < strlen(g_prod_str); i++) {
-    // Add your code to wait on the semaphore and obtain the lock,
-    // then consume g_prod_str[i] from the g_buffer, replacing
-    // the following line.
 
     int value = BLOCK;
 
@@ -134,7 +131,6 @@ void *consumer(void *ptr) {
     printf("Thread %d consumed %c\n", thread_id, value);
   }
 
-//  printf("Exit thread\n");
   pthread_exit(0);
 } /* consumer() */
 
@@ -162,14 +158,11 @@ int main(int argc, char **argv) {
   sem_init(&g_empty_sem, 0, 0);
   sem_init(&g_full_sem, 0, BUF_SIZE);
 
-  // Add your code to create the threads.
-  // Make sure to allocate and pass the arguments correctly.
-
   /* This is used to create the thread id's */
 
   int num_thrds = 0;
 
-  /* Create all of the producers */
+  /* Create all of the threads */
 
   int num_producers = atoi(argv[1]);
   pthread_t *producers = (pthread_t *)
@@ -196,43 +189,9 @@ int main(int argc, char **argv) {
     pthread_join(consumers[i], NULL);
   }
 
-/*
-  num_thrds = 0;
-
-   Create all of the consumers
-
-  int num_consumers = atoi(argv[2]);
-  pthread_t *consumers = (pthread_t *)
-    malloc(num_consumers * sizeof(pthread_t));
-  for (int i = 0; i < num_consumers; i++) {
-    pthread_t thrd = 0;
-    int *id = (int *) malloc(sizeof(int));
-    *id = num_thrds++;
-    consumers[i] = thrd;
-    pthread_create(&consumers[i], NULL, (void * (*)(void *)) consumer,
-        (void *) id);
-  }
-
-*/
-
-  // Add your code to wait for the threads to finish.
-  // Otherwise main might run to the end
-  // and kill the entire process when it exits.
-
-//  for (int i = 0; i < num_producers; i++) {
-//  }
-/*
-  for (int i = 0; i < num_consumers; i++) {
-    pthread_join(consumers[i], NULL);
-  }
-*/
-
-//  printf("Joined\n");
-
   pthread_mutex_destroy(&g_buffer_mutex);
   sem_destroy(&g_full_sem);
   sem_destroy(&g_empty_sem);
-
 
   return 0;
 } /* main() */
