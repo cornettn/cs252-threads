@@ -200,7 +200,6 @@ void *create_no2(void *ptr) {
     // Add your code to consume one N2 molecule and two O2 molecules and
     // produce two NO2 molecules
 
-
     /* Wait for one n2 molecule and two o2 molecules */
 
     sem_wait(&g_sig_no2);
