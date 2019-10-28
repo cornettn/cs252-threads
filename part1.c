@@ -174,18 +174,28 @@ int main(int argc, char **argv) {
   int num_producers = atoi(argv[1]);
   pthread_t *producers = (pthread_t *)
     malloc(num_producers * sizeof(pthread_t));
+
+  int num_consumers = atoi(argv[2]);
+  pthread_t *consumers = (pthread_t *)
+    malloc(num_consumers * sizeof(pthread_t));
+
   for (int i = 0; i < num_producers; i++) {
-    pthread_t thrd = 0;
+    pthread_t prod_thrd = 0;
+    pthread_t cons_thrd = 0;
     int *id = (int *) malloc(sizeof(int));
     *id = num_thrds++;
-    producers[i] = thrd;
+    producers[i] = prod_thrd;
+    consumers[i] = cons_thrd;
     pthread_create(&producers[i], NULL, (void * (*)(void *)) producer,
+        (void *) id);
+    pthread_create(&consumers[i], NULL, (void * (*)(void *)) consumer,
         (void *) id);
   }
 
+/*
   num_thrds = 0;
 
-  /* Create all of the consumers */
+   Create all of the consumers
 
   int num_consumers = atoi(argv[2]);
   pthread_t *consumers = (pthread_t *)
@@ -199,17 +209,16 @@ int main(int argc, char **argv) {
         (void *) id);
   }
 
+*/
 
   // Add your code to wait for the threads to finish.
   // Otherwise main might run to the end
   // and kill the entire process when it exits.
 
-//  printf("Join producers\n");
   for (int i = 0; i < num_producers; i++) {
     pthread_join(producers[i], NULL);
   }
 
-//  printf("Join Consumers\n");
   for (int i = 0; i < num_consumers; i++) {
     pthread_join(consumers[i], NULL);
   }
