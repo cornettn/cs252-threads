@@ -17,8 +17,8 @@ bounded_buffer g_buffer = {0};
 
 // This is the number of characters in the buffer at any given time
 
-int g_indices_produced = -1;
-int g_indices_consumed = -1;
+//int g_indices_produced = -1;
+//int g_indices_consumed = -1;
 
 // This mutex must be held whenever you use the g_buffer.
 
@@ -41,40 +41,39 @@ sem_t g_full_sem = {0};
 int enqueue(int index) {
   int value = SUCCESS;
 
+  /* Wait until there is space in the buffer to place another character */
+
+  sem_wait(&g_full_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-  /* Ensure that we are not queueing the same character twice */
-
-  if (index <= g_indices_produced) {
-//    printf("buf[%d] is blocked\n", index);
-    value = BLOCK;
-  }
-  else {
-    g_buffer.buf[g_buffer.tail] = g_prod_str[index];
-    g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
-    g_indices_produced++;
-  }
+  g_buffer.buf[g_buffer.tail] = g_prod_str[index];
+  g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
 
   pthread_mutex_unlock(&g_buffer_mutex);
+
+  /* Let everything know that there is another character in the buffer */
+
+  sem_post(&g_empty_sem);
 
   return value;
 }
 
 int dequeue(int index) {
-  int value = BLOCK;
 
+  /* Wait until there are characters to be consumed */
+
+  sem_wait(&g_empty_sem);
   pthread_mutex_lock(&g_buffer_mutex);
 
-  if (index > g_indices_consumed) {
-    value = g_buffer.buf[g_buffer.head];
-    g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
-    g_indices_consumed++;
-  }
-//  else {
-//    printf("buf[%d] is already consumed\n", index);
-//  }
+  value = g_buffer.buf[g_buffer.head];
+  g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
 
   pthread_mutex_unlock(&g_buffer_mutex);
+
+  /* Let everything know that there is another space available in
+   * the buffer to be used */
+
+  sem_post(&g_full_sem);
 
 
   return value;
@@ -98,26 +97,11 @@ void *producer(void *ptr) {
     // Add your code to wait on the semaphore and obtain the lock,
     // then add g_prod_str[i] to the g_buffer.
 
-    sem_wait(&g_full_sem);
-    pthread_mutex_lock(&g_buffer_mutex);
+    /* Insert into the queue */
 
-    int value = SUCCESS;
+    int value = enqueue(g_prod_str[i]);
 
-    if ((int) i <= g_indices_produced) {
-      value = BLOCK;
-    }
-    else {
-      g_buffer.buf[g_buffer.tail] = g_prod_str[i];
-      g_buffer.tail = (g_buffer.tail + 1) % BUF_SIZE;
-      g_indices_produced++;
-    }
-
-    pthread_mutex_unlock(&g_buffer_mutex);
-
-    if (value != BLOCK) {
-      printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
-      sem_post(&g_empty_sem);
-    }
+    printf("Thread %d produced %c\n", thread_id, g_prod_str[i]);
   }
 
   pthread_exit(0);
@@ -143,22 +127,11 @@ void *consumer(void *ptr) {
     // then consume g_prod_str[i] from the g_buffer, replacing
     // the following line.
 
-    sem_wait(&g_empty_sem);
-    pthread_mutex_lock(&g_buffer_mutex);
     int value = BLOCK;
 
-    if ((int) i > g_indices_consumed) {
-      value = g_buffer.buf[g_buffer.head];
-      g_buffer.head = (g_buffer.head + 1) % BUF_SIZE;
-      g_indices_consumed++;
-    }
+    value = dequeue();
 
-    pthread_mutex_unlock(&g_buffer_mutex);
-
-    if (value != BLOCK) {
-      printf("Thread %d consumed %c\n", thread_id, value);
-      sem_post(&g_full_sem);
-    }
+    printf("Thread %d consumed %c\n", thread_id, value);
   }
 
 //  printf("Exit thread\n");
