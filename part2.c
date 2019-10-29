@@ -211,6 +211,7 @@ void *create_no2(void *ptr) {
     /* Exit when there are no more molecules to use */
 
     if ((exit) && (basic_molecules_done())) {
+      printf("Break no2\n");
       break;
     }
   }
@@ -246,6 +247,7 @@ void *create_o3(void *ptr) {
     /* Exit when there are no more o3 molecules to be used */
 
     if ((exit) && (g_o2_done)) {
+      printf("Break o2\n");
       break;
     }
   }
