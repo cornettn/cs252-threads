@@ -261,15 +261,14 @@ void *create_o3(void *ptr) {
     /* Exit when there are no more o3 molecules to be used */
 
     if ((exit) && (g_o2_done == 1)) {
-      printf("Break o3\n\tNum o2 left: %d\n", g_num_o2);
-      break;
-    }
-  }
-
   sem_wait(&g_sig_basic);
   printf("*****************************\nO3 DONE BEING PRODUCED\n*********************************\n");
   print_values();
   sem_post(&g_sig_basic);
+      break;
+    }
+  }
+
   pthread_exit(0);
 } /* create_o3() */
 
