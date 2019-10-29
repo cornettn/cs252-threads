@@ -37,7 +37,7 @@ int g_n2_done = 0;
 
 int atoms_done() {
   sem_wait(&g_sig_basic);
-  int val = g_oxy_done && g_nitr_done;
+  int val = g_oxy_done & g_nitr_done;
   sem_post(&g_sig_basic);
   return val;
 } /* atoms_done() */
@@ -48,7 +48,7 @@ int atoms_done() {
 
 int basic_molecules_done() {
   sem_wait(&g_sig_basic);
-  int val = g_o2_done && g_n2_done;
+  int val = g_o2_done & g_n2_done;
   sem_post(&g_sig_basic);
   return val;
 } /* basic_molecules_done() */
@@ -331,6 +331,7 @@ int main(int argc, char **argv) {
   pthread_join(no2_moles_thrd, NULL);
   pthread_join(o3_moles_thrd, NULL);
 
+  printf("N: %d\nO: %d\nN2: %d\nO2: %d\n", g_num_nitrogen, g_num_oxygen, g_num_o2, g_num_n2);
 
   exit(EXIT_SUCCESS);
 } /* main() */
