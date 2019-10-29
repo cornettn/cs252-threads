@@ -36,7 +36,10 @@ int g_n2_done = 0;
  */
 
 int atoms_done() {
-  return g_oxy_done && g_nitr_done;
+  sem_wait(&g_sig_basic);
+  int val = g_oxy_done && g_nitr_done;
+  sem_post(&g_sig_basic);
+  return val;
 } /* atoms_done() */
 
 /* This function is used to determine when all the basic molecules are
@@ -44,7 +47,10 @@ int atoms_done() {
  */
 
 int basic_molecules_done() {
-  return g_o2_done && g_n2_done;
+  sem_wait(&g_sig_basic);
+  int val = g_o2_done && g_n2_done;
+  sem_post(&g_sig_basic);
+  return val;
 } /* basic_molecules_done() */
 
 /*
