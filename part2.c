@@ -246,8 +246,8 @@ void *create_o3(void *ptr) {
 
     /* Exit when there are no more o3 molecules to be used */
 
-    if ((exit) && (g_o2_done)) {
-      printf("Break o2\n");
+    if ((exit) && (g_o2_done == 1)) {
+      printf("Break o3\n\tNum o2 left: %d\n", g_num_o2);
       break;
     }
   }
