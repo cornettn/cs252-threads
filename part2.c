@@ -135,20 +135,20 @@ void *create_n2(void *ptr) {
       printf("Two atoms of nitrogen combined to produce one molecule of N2.\n");
     }
 
-    sem_post(&g_sig_basic);
-
     /* Break the loop if all atoms have been created and there are no more
      * molecules to make. */
 
     if ((exit) && (g_nitr_done)) {
       break;
     }
+
+    sem_post(&g_sig_basic);
   }
 
-  sem_wait(&g_sig_basic);
   printf("*****************************\nN2 DONE BEING PRODUCED\n*********************************\n");
   print_values();
   g_n2_done = 1;
+
   sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_n2() */
@@ -175,7 +175,6 @@ void *create_o2(void *ptr) {
       printf("Two atoms of oxygen combined to produce one molecule of O2.\n");
     }
 
-    sem_post(&g_sig_basic);
 
     /* Break if there are no more oxygen atoms to use and all atoms have been
      * created */
@@ -184,12 +183,14 @@ void *create_o2(void *ptr) {
       printf("Break o2\n,\tNum o2: %d\n", g_num_o2);
       break;
     }
+
+    sem_post(&g_sig_basic);
   }
 
-  sem_wait(&g_sig_basic);
   printf("*****************************\nO2 DONE BEING PRODUCED\n*********************************\n");
   print_values();
   g_o2_done = 1;
+
   sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_o2() */
@@ -220,16 +221,20 @@ void *create_no2(void *ptr) {
              "produce two molecules of NO2.\n");
     }
 
-    sem_post(&g_sig_basic);
-
     /* Exit when there are no more molecules to use */
 
     if ((exit) && (basic_molecules_done())) {
-      printf("Break no2\n");
       break;
     }
+
+    sem_post(&g_sig_basic);
   }
 
+  printf("*****************************\nNO2 DONE BEING PRODUCED\n*********************************\n");
+  print_values();
+
+
+  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_no2() */
 
