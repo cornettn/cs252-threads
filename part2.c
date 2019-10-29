@@ -53,6 +53,11 @@ int basic_molecules_done() {
   return val;
 } /* basic_molecules_done() */
 
+
+void print_values() {
+  printf("N: %d\nO: %d\nN2: %d\nO2: %d\n", g_num_nitrogen, g_num_oxygen, g_num_o2, g_num_n2);
+}
+
 /*
  * Create oxygen atoms. The number of atoms to create is specified by the
  * argument, which is an int cast to (void *).
@@ -73,6 +78,7 @@ void *create_oxygen(void *ptr) {
 
   sem_wait(&g_sig_basic);
   printf("*****************************\nOXYGEN DONE BEING PRODUCED\n*********************************\n");
+  print_values();
   g_oxy_done = 1;
   sem_post(&g_sig_basic);
   pthread_exit(0);
@@ -335,7 +341,6 @@ int main(int argc, char **argv) {
   pthread_join(no2_moles_thrd, NULL);
   pthread_join(o3_moles_thrd, NULL);
 
-  printf("N: %d\nO: %d\nN2: %d\nO2: %d\n", g_num_nitrogen, g_num_oxygen, g_num_o2, g_num_n2);
 
   exit(EXIT_SUCCESS);
 } /* main() */
