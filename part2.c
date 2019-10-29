@@ -71,9 +71,7 @@ void *create_oxygen(void *ptr) {
   }
 
 
-  sem_wait(&g_sig_basic);
   g_oxy_done = 1;
-  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_oxygen() */
 
@@ -96,9 +94,7 @@ void *create_nitrogen(void *ptr) {
   }
 
 
-  sem_wait(&g_sig_basic);
   g_nitr_done = 1;
-  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_nitrogen() */
 
@@ -131,14 +127,12 @@ void *create_n2(void *ptr) {
     /* Break the loop if all atoms have been created and there are no more
      * molecules to make. */
 
-    if ((exit) && (atoms_done())) {
+    if ((exit) && (g_nitr_done)) {
       break;
     }
   }
 
-  sem_wait(&g_sig_basic);
   g_n2_done = 1;
-  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_n2() */
 
@@ -169,14 +163,12 @@ void *create_o2(void *ptr) {
     /* Break if there are no more oxygen atoms to use and all atoms have been
      * created */
 
-    if ((exit) && (atoms_done())) {
+    if ((exit) && (g_oxy_done)) {
       break;
     }
   }
 
-  sem_wait(&g_sig_basic);
   g_o2_done = 1;
-  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_o2() */
 
@@ -245,7 +237,7 @@ void *create_o3(void *ptr) {
 
     /* Exit when there are no more o3 molecules to be used */
 
-    if ((exit) && (basic_molecules_done())) {
+    if ((exit) && (g_o2_done)) {
       break;
     }
   }
