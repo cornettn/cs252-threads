@@ -55,7 +55,7 @@ int basic_molecules_done() {
 
 
 void print_values() {
-  printf("N: %d\nO: %d\nN2: %d\nO2: %d\n", g_num_nitrogen, g_num_oxygen, g_num_o2, g_num_n2);
+  printf("N: %d\nO: %d\nN2: %d\nO2: %d\n", g_num_nitrogen, g_num_oxygen, g_num_n2, g_num_o2);
 }
 
 /*
@@ -247,7 +247,6 @@ void *create_o3(void *ptr) {
     /* Ensure that there are enough o2 molecules to make o3 */
 
     int exit = g_num_o2 < 3;
-    printf("\tNum o2: %d\n", g_num_o2);
     if (!exit) {
 
       g_num_o2 -= 3;
