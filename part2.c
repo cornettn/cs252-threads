@@ -256,19 +256,21 @@ void *create_o3(void *ptr) {
              "two molecules of O3.\n");
     }
 
-    sem_post(&g_sig_basic);
 
     /* Exit when there are no more o3 molecules to be used */
 
     if ((exit) && (g_o2_done == 1)) {
-  sem_wait(&g_sig_basic);
-  printf("*****************************\nO3 DONE BEING PRODUCED\n*********************************\n");
-  print_values();
-  sem_post(&g_sig_basic);
       break;
     }
+
+    sem_post(&g_sig_basic);
   }
 
+  printf("*****************************\nO3 DONE BEING PRODUCED\n*********************************\n");
+  print_values();
+
+
+  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_o3() */
 
