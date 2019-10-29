@@ -170,6 +170,7 @@ void *create_o2(void *ptr) {
      * created */
 
     if ((exit) && (g_oxy_done)) {
+      printf("Break o2\n,\tNum o2: %d\n", g_num_o2);
       break;
     }
   }
