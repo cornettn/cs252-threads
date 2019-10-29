@@ -233,7 +233,7 @@ void *create_o3(void *ptr) {
     /* Ensure that there are enough o2 molecules to make o3 */
 
     int exit = g_num_o2 < 3;
-
+    printf("\tNum o2: %d\n", g_num_o2);
     if (!exit) {
 
       g_num_o2 -= 3;
