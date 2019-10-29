@@ -65,7 +65,9 @@ void *create_oxygen(void *ptr) {
   }
 
 
+  sem_wait(&g_sig_basic);
   g_oxy_done = 1;
+  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_oxygen() */
 
