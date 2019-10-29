@@ -266,6 +266,10 @@ void *create_o3(void *ptr) {
     }
   }
 
+  sem_wait(&g_sig_basic);
+  printf("*****************************\nO3 DONE BEING PRODUCED\n*********************************\n");
+  print_values();
+  sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_o3() */
 
