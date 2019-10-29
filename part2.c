@@ -49,11 +49,6 @@ int basic_molecules_done() {
   return val;
 } /* basic_molecules_done() */
 
-
-void print_values() {
-  printf("N: %d\nO: %d\nN2: %d\nO2: %d\n", g_num_nitrogen, g_num_oxygen, g_num_n2, g_num_o2);
-}
-
 /*
  * Create oxygen atoms. The number of atoms to create is specified by the
  * argument, which is an int cast to (void *).
@@ -73,8 +68,6 @@ void *create_oxygen(void *ptr) {
 
 
   sem_wait(&g_sig_basic);
-  printf("*****************************\nOXYGEN DONE BEING PRODUCED\n*********************************\n");
-  print_values();
   g_oxy_done = 1;
   sem_post(&g_sig_basic);
   pthread_exit(0);
@@ -101,8 +94,6 @@ void *create_nitrogen(void *ptr) {
 
   sem_wait(&g_sig_basic);
   g_nitr_done = 1;
-  printf("*****************************\nNITROGEN DONE BEING PRODUCED\n*********************************\n");
-  print_values();
   sem_post(&g_sig_basic);
   pthread_exit(0);
 } /* create_nitrogen() */
@@ -141,8 +132,6 @@ void *create_n2(void *ptr) {
     sem_post(&g_sig_basic);
   }
 
-  printf("*****************************\nN2 DONE BEING PRODUCED\n*********************************\n");
-  print_values();
   g_n2_done = 1;
 
   sem_post(&g_sig_basic);
@@ -176,15 +165,12 @@ void *create_o2(void *ptr) {
      * created */
 
     if ((exit) && (g_oxy_done)) {
-      printf("Break o2\n,\tNum o2: %d\n", g_num_o2);
       break;
     }
 
     sem_post(&g_sig_basic);
   }
 
-  printf("*****************************\nO2 DONE BEING PRODUCED\n*********************************\n");
-  print_values();
   g_o2_done = 1;
 
   sem_post(&g_sig_basic);
@@ -226,9 +212,6 @@ void *create_no2(void *ptr) {
     sem_post(&g_sig_basic);
   }
 
-  printf("*****************************\nNO2 DONE BEING PRODUCED\n*********************************\n");
-  print_values();
-
 
   sem_post(&g_sig_basic);
   pthread_exit(0);
@@ -265,9 +248,6 @@ void *create_o3(void *ptr) {
 
     sem_post(&g_sig_basic);
   }
-
-  printf("*****************************\nO3 DONE BEING PRODUCED\n*********************************\n");
-  print_values();
 
 
   sem_post(&g_sig_basic);
